@@ -10,28 +10,27 @@
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
     <style>
         /* =========================================
-           1. 색상 및 기본 변수 설정 (인트로 컬러에 맞춰 톤 조절)
+           1. 색상 변수
            ========================================= */
         :root {
             /* 맑고 따뜻한 느낌을 주는 내부 페이지 바탕색 */
             --bg-color: #F6F8FA;
 
-            /* 인트로의 페일 블루(#CBD7EF)와 부드럽게 이어지는 메인 포인트 컬러
-               → 타임라인 점, 테두리, 밑줄 같은 '장식'에만 사용 */
+            /* 인트로의 페일 블루(#CBD7EF)와 이어지는 포인트 컬러.
+               타임라인 점, 테두리 같은 '장식'에만 사용 */
             --primary-color: #8BA6D3;
             --primary-light: #EEF2F6;
 
-            /* ★ 같은 계열의 진한 톤. 포인트 컬러를 '글자'로 쓸 때만 사용.
-               #8BA6D3은 흰 배경에서 2.5:1이라 본문 크기 글씨로는 잘 안 읽힘.
-               이 색은 흰 배경 5.3:1 / 연한 배경 4.7:1로 WCAG AA를 만족함. */
+            /* 포인트 컬러를 '글자'로 쓸 때는 이 진한 톤을 사용.
+               연한 #8BA6D3 은 본문 크기 글씨로 쓰면 대비가 부족해 잘 안 읽힘. */
             --primary-deep: #4C6D9F;
 
-            /* 칙칙한 완전 블랙(#222) 대신, 고급스러운 딥 네이비로 변경 */
+            /* 완전한 검정 대신 딥 네이비 */
             --text-main: #2C3E50;
 
             /* 부드러운 쿨 그레이 톤의 서브 텍스트 */
             --text-sub: #5C6F82;
-            /* 톤은 유지하되 한 단계만 진하게 (기존 #90A0B0은 2.5:1로 야외에서 잘 안 보임) */
+            /* 보조 텍스트. 이보다 연하게 하면 밝은 곳에서 잘 안 보임 */
             --text-muted: #647383;
 
             --card-bg: #FFFFFF;
@@ -42,7 +41,7 @@
            ========================================= */
         html { scroll-behavior: smooth; }
         body {
-            /* 앱 바깥의 여백 배경도 살짝 톤다운된 색으로 맞춰 앱 컨테이너를 돋보이게 함 */
+            /* 앱 바깥 여백 (PC 등 넓은 화면에서 보이는 부분) */
             background-color: #E6EAEE;
             color: var(--text-main);
             font-size: 15px;
@@ -84,9 +83,9 @@
             to { opacity: 1; transform: translateY(0); }
         }
         /* =========================================
-           2-1. ★★★ 상단 대제목 (스크롤하면 그 자리에서 축소) ★★★
-           ★ 상하 여백을 줄여 고정 헤더 높이를 낮춤(112px → 87px).
-             헤더가 높으면 그 아래 첫 제목("예배순서")이 가려져 잘려 보임.
+           2-1. 상단 대제목 (스크롤하면 그 자리에서 축소)
+           * 여백을 키우면 헤더가 높아집니다. 헤더가 높아지면 그 아래
+             첫 제목이 가려질 수 있으니 handleScroll 의 축소 기준값도 함께 확인하세요.
            ========================================= */
         .page-hero {
             position: fixed; top: 0; left: 50%; transform: translateX(-50%);
@@ -94,7 +93,7 @@
             box-sizing: border-box;
             text-align: center;
             padding: calc(24px + env(safe-area-inset-top)) 22px 15px 22px;
-            background: rgba(246, 248, 250, 0.85); /* 바뀐 배경색(--bg-color)에 맞춤 */
+            background: rgba(246, 248, 250, 0.85); /* --bg-color 와 같은 색, 반투명 */
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
             border-bottom: 1px solid rgba(0,0,0,0);
@@ -123,7 +122,7 @@
         .page-hero.compact .hero-title { font-size: 16px; letter-spacing: 0.4px; }
         .page-hero.compact .hero-sub { max-height: 0; opacity: 0; margin-top: 0; }
         /* =========================================
-           3. ★★★ 인트로 화면 (그라데이션 & 노이즈 질감 적용) ★★★
+           3. 인트로 화면 (그라데이션 + 노이즈 질감)
            ========================================= */
         #view-intro {
             position: fixed;
@@ -157,28 +156,25 @@
         #view-intro.fade-out { opacity: 0; pointer-events: none; }
         .intro-content { text-align: center; margin-bottom: 40px; position: relative; z-index: 1; }
         .intro-date-badge { display: inline-block; background-color: rgba(255, 255, 255, 0.7); color: var(--text-sub); font-size: 14px; font-weight: 700; padding: 6px 14px; border-radius: 20px; margin-bottom: 35px; box-shadow: 0 2px 6px rgba(0,0,0,0.03); }
-        /* 밝은 화이트~옐로 구간 위에 놓이므로 진한 톤(--primary-deep)을 사용 */
+        /* 밝은 배경 위에 놓이므로 진한 톤을 사용 */
         .intro-subtitle { font-size: 14px; font-weight: 700; color: var(--primary-deep); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 15px; }
         .intro-main-title { font-size: 34px; font-weight: 800; color: var(--text-main); line-height: 1.3; margin-bottom: 20px; }
         .intro-desc { font-size: 14px; color: var(--text-sub); line-height: 1.6; word-break: keep-all; }
 
-        /* 버튼의 글래스모피즘 효과는 유지하고, 글씨 색상은 변경된 var(--text-main)을 상속받습니다 */
+        /* 유리 질감 버튼. 배경이 밝아서 글씨는 딥 네이비 */
         .intro-btn { position: relative; z-index: 1; width: 100%; max-width: 320px; background-color: rgba(255, 255, 255, 0.25); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.6); border-top: 1px solid rgba(255, 255, 255, 0.9); color: var(--text-main); font-size: 16px; font-weight: 700; padding: 18px 0; border-radius: 30px; cursor: pointer; box-shadow: 0 15px 35px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.6); transition: transform 0.15s ease-in-out; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .intro-btn:active { transform: scale(0.95); background-color: rgba(255, 255, 255, 0.4); }
         /* =========================================
            4. 하단 플로팅 메인 메뉴 & 그라데이션 마스크
            ========================================= */
-        /* 하단 그라데이션 마스크의 색상도 바뀐 배경색에 동기화 */
+        /* 하단을 배경색으로 서서히 덮어, 메뉴 뒤로 지나가는 본문을 가려줌 */
         .bottom-gradient-mask { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; height: calc(160px + env(safe-area-inset-bottom)); background: linear-gradient(to top, rgba(246,248,250, 1) 35%, rgba(246,248,250, 0.8) 65%, rgba(246,248,250, 0) 100%); pointer-events: none; z-index: 998; }
 
-        /* 메인 메뉴(네이비)는 전체 톤을 잡아주는 닻 역할을 하므로 #2C3E50 유지.
-           ★ flex + space-between이면 활성 탭(아이콘 + 넓은 패딩)이 비활성 탭보다 커져서
-             갤럭시 Z 폴드 커버 화면(약 344~374px)처럼 좁은 폭에서 세 버튼 폭 합이 넘쳐 정렬이 깨짐.
-             grid로 두면 폭에 상관없이 항상 3등분이 유지됨. */
-        /* ★ flex 대신 grid로 완벽한 1:1:1 3등분 고정.
-           칸 폭이 고정이라 어느 탭을 눌러도 세 탭의 자리가 전혀 움직이지 않음.
-           대신 글씨 크기(14px)·자간(-0.4px)·아이콘(15px)을 조금 압축하고
-           메뉴 폭을 88%로 넓혀 '아름다운 순 + 아이콘'이 한 칸에 들어가게 함. */
+        /* 메뉴 배경 네이비(#2C3E50)는 전체 톤을 잡아주는 색이라 그대로 둡니다.
+           grid 1:1:1 로 칸을 고정해서, 어느 탭을 눌러도 세 탭의 자리가 움직이지 않습니다.
+           글씨 14px · 자간 -0.4px · 아이콘 15px 로 압축하고 폭을 88%로 잡아
+           '아름다운 순 + 아이콘'이 한 칸에 겨우 들어갑니다.
+           글씨를 키우거나 탭 이름을 늘리면 넘치니 주의하세요. */
         .tabs-menu {
             position: fixed; bottom: calc(15px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%);
             width: 88%; /* 기본 폭을 살짝 넓혀 글씨 공간 확보 */
@@ -195,13 +191,13 @@
             cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-            /* ★ 핵심: 두 줄 바꿈 절대 방지 & 자간을 좁혀서 공간 압축 */
+            /* 줄바꿈 방지 + 자간을 좁혀 한 칸에 들어가게 함 */
             white-space: nowrap;
             letter-spacing: -0.4px;
         }
         .nav-item .nav-icon { display: none; width: 15px; height: 15px; flex-shrink: 0; }
 
-        /* 활성화된 탭 (너비는 그대로 유지, 내부 디자인만 변경) */
+        /* 활성 탭 (칸 너비는 그대로, 배경과 아이콘만 바뀜) */
         .nav-item.active {
             background-color: #FFFFFF; color: var(--text-main);
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -209,7 +205,7 @@
         .nav-item.active .nav-icon { display: inline-block; }
         .nav-item.active span { font-weight: 800; }
 
-        /* ★ 작은 폰(아이폰 미니, 갤럭시 플립 커버 등)에서 글씨 안 짤리도록 완벽 대응 */
+        /* 작은 폰(아이폰 미니, 갤럭시 플립 커버 화면 등) 대응 */
         @media (max-width: 380px) {
             /* 좁은 폰에서는 메뉴 전체 가로폭을 넓게 써서 숨통을 틔워줌 */
             .tabs-menu { width: 95%; padding: 6px; gap: 2px; }
@@ -228,9 +224,8 @@
             display: grid; grid-template-columns: repeat(2, 1fr);
             text-shadow: 0 0 10px rgba(255,255,255,1), 0 0 20px rgba(255,255,255,0.9);
         }
-        /* ★ justify-self: center → 버튼 폭이 글자 폭에 딱 맞게 줄어듦.
-           그래야 아래 밑줄(::after)이 칸 절반이 아니라 글자 길이만큼만 그려짐.
-           (max-width로 아주 좁은 화면에서 칸 밖으로 삐져나가는 것만 막아둠) */
+        /* justify-self: center 로 버튼 폭을 글자 폭에 맞춥니다.
+           그래야 아래 밑줄(::after)이 칸 절반이 아니라 글자 길이만큼만 그려집니다. */
         .sub-tab-btn { justify-self: center; max-width: 100%; padding: 5px 10px 8px 10px; background-color: transparent; color: var(--text-muted); font-weight: 600; font-size: 15.5px; border: none; border-radius: 0; cursor: pointer; position: relative; transition: color 0.2s ease; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; word-break: keep-all; }
         .sub-tab-btn.active { background-color: transparent; color: var(--text-main); font-weight: 800; box-shadow: none; }
         .sub-tab-btn::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 0; height: 3px; background-color: var(--text-main); border-radius: 3px; transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 5px rgba(255,255,255,0.8); }
@@ -243,7 +238,6 @@
         /* =========================================
            6. 공통 컨텐츠 스타일
            ========================================= */
-        .main-title { margin: 0; font-size: 32px; font-weight: 800; line-height: 1.3; letter-spacing: -0.5px; color: var(--text-main); }
         .theme-verse { font-size: 14px; color: var(--text-sub); line-height: 1.6; margin: 0; word-break: keep-all; }
         .section-header-wrap { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 15px; padding: 0 5px; }
         .section-title { font-size: 20px; font-weight: 700; color: var(--primary-deep); line-height: 1.4; margin: 0; }
@@ -260,6 +254,11 @@
         .notice-table th, .notice-table td { border: 1px solid #E0E0E0; padding: 10px 8px; text-align: center; word-break: keep-all; line-height: 1.4; }
         .notice-table th { background-color: var(--primary-light); font-weight: 700; color: var(--text-main); font-size: 13px; }
         .notice-table td { color: var(--text-sub); }
+        /* 주간 소식 - 담당자 명단을 한 줄로 이어 붙여 보여줌 (부서명을 굵게) */
+        .pair-flow { margin-top: 10px; font-size: 14px; line-height: 1.9; color: var(--text-sub); word-break: keep-all; }
+        .pair-flow b { color: var(--text-main); font-weight: 700; }
+        .pair-flow .sep { color: #C9D2DC; margin: 0 6px; }
+
         .notice-figure { margin: 12px 0 0 0; }
         .notice-figure img { width: 100%; height: auto; display: block; border-radius: 12px; background: #F0F4F8; }
         .notice-figure figcaption { font-size: 12.5px; color: var(--text-muted); text-align: center; margin-top: 8px; line-height: 1.5; word-break: keep-all; }
@@ -308,7 +307,7 @@
         .team-cell .team-place { font-size: 12.5px; font-weight: 700; color: var(--text-main); line-height: 1.3; word-break: keep-all; }
         .team-cell .team-floor { display: block; font-size: 11px; font-weight: 500; color: var(--text-muted); margin-top: 3px; }
         /* =========================================
-           7. ★★★ 동아리 섹션 (모노톤 라인 아이콘 적용) ★★★
+           7. 동아리 섹션
            ========================================= */
         .club-section-header { padding: 0 20px; margin-top: 25px; margin-bottom: 10px; }
         .club-section-title { font-size: 17px; font-weight: 700; color: var(--text-main); margin-bottom: 5px; }
@@ -346,8 +345,9 @@
         }
         .club-icon-wrap svg { width: 22px; height: 22px; }
         .club-name { font-size: 18px; font-weight: 800; line-height: 1.4; margin-bottom: 4px; letter-spacing: -0.5px; }
-        .club-type { font-size: 13px; font-weight: 600; opacity: 0.95; word-break: keep-all; line-height: 1.3;}
+        .club-type { font-size: 13px; font-weight: 600; opacity: 0.95; word-break: keep-all; line-height: 1.3; }
 
+        /* 카드 오른쪽 아래 + 버튼 */
         .club-plus-btn {
             position: absolute; bottom: 15px; right: 15px; width: 28px; height: 28px;
             background: white; border-radius: 50%;
@@ -355,6 +355,7 @@
             color: var(--text-sub); box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-shadow: none;
         }
         .club-plus-btn svg { width: 14px; height: 14px; }
+
         .bg-coral-peach   { background: linear-gradient(135deg, rgba(242, 156, 131, 0.85) 0%, rgba(245, 181, 163, 0.6) 100%); }
         .bg-soft-lavender { background: linear-gradient(135deg, rgba(165, 147, 194, 0.85) 0%, rgba(196, 182, 220, 0.6) 100%); }
         .bg-spring-green  { background: linear-gradient(135deg, rgba(152, 193, 140, 0.85) 0%, rgba(180, 215, 170, 0.6) 100%); }
@@ -363,7 +364,7 @@
         .bg-pale-sky      { background: linear-gradient(135deg, rgba(160, 195, 215, 0.85) 0%, rgba(218, 232, 240, 0.6) 100%); }
         .bg-soft-lilac    { background: linear-gradient(135deg, rgba(187, 165, 211, 0.85) 0%, rgba(212, 195, 230, 0.6) 100%); }
         /* =========================================
-           8. ★★★ 바텀 시트 (외곽선 라인 아이콘 완벽 적용) ★★★
+           8. 동아리 상세 팝업 (바텀 시트)
            ========================================= */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 3000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
         .modal-overlay.show { opacity: 1; pointer-events: auto; }
@@ -403,7 +404,7 @@
         .bs-info-label svg { width: 16px; height: 16px; color: var(--text-muted); }
         .bs-info-text { color: var(--text-sub); line-height: 1.4;}
         /* =========================================
-           9. ★★★ 교회 정보 (CSS Grid 강제 정렬) ★★★
+           9. 교회 정보
            ========================================= */
         .church-info-transparent { padding: 20px 0 20px 0; }
         .church-info-transparent .info-grid {
@@ -421,7 +422,7 @@
         .contact-value { font-size: 14px; color: var(--text-sub); }
 
         /* =========================================
-           10. 하단 공식 채널 (모노톤 톤다운 & 사이즈 최적화)
+           10. 하단 공식 채널
            ========================================= */
         .sns-horizontal-wrap { display: flex; align-items: center; justify-content: space-evenly; margin: 15px 0 20px 0; }
         .sns-h-item { display: flex; flex-direction: column; align-items: center; gap: 5px; text-decoration: none; transition: transform 0.2s ease; flex: 1; }
@@ -441,11 +442,10 @@
                 <h1 class="intro-main-title" id="intro-theme">나를 복음으로!!</h1>
                 <p class="intro-desc" id="intro-subtitle"></p>
             </div>
-            <!-- ★ 인트로 버튼 (배경 글래스모피즘 효과는 그대로 유지됨) ★ -->
             <button class="intro-btn" onclick="openMainWeekly()">2026 청년예배 주보 열기</button>
         </div>
         <div class="bottom-gradient-mask"></div>
-        <!-- ★★★ 상단 (스크롤하면 축소) ★★★ -->
+        <!-- 상단 대제목 -->
         <div class="page-hero" id="page-hero">
             <h1 class="hero-title">Wolgwang Youth</h1>
             <p class="hero-sub" id="hero-sub">제26-34호</p>
@@ -495,7 +495,6 @@
                     <div class="section-header-wrap">
                         <div class="section-title">아름다운 순</div>
                     </div>
-                    <div class="card" id="sermon-summary"></div>
                     <div class="card" id="sermon-questions"></div>
                 </div>
             </div>
@@ -548,7 +547,7 @@
                     <div class="card-title">새가족 안내</div>
                     <ul class="guide-list">
                         <li>예배 전(1층), 예배 후(2층) 새가족 등록을 받습니다</li>
-                        <li>새가족 교육은 선교센터 2층 새가족실에서 4주간 진행됩니다.</li>
+                        <li>새가족 교육은 선교센터 2층 새가족실에서 4주간 진행됩니다</li>
                     </ul>
                 </div>
                 <div class="card">
@@ -557,28 +556,28 @@
                         <div class="team-cell">
                             <div class="team-cell-head">
                                 <div class="team-no">1팀</div>
-                                <div class="team-name">이애영</div>
+                                <div class="team-name">이름</div>
                             </div>
                             <div class="team-place">디모데실<span class="team-floor">선교센터 2층</span></div>
                         </div>
                         <div class="team-cell">
                             <div class="team-cell-head">
                                 <div class="team-no">2팀</div>
-                                <div class="team-name">남믿음</div>
+                                <div class="team-name">이름</div>
                             </div>
                             <div class="team-place">사무엘실<span class="team-floor">선교센터 2층</span></div>
                         </div>
                         <div class="team-cell">
                             <div class="team-cell-head">
                                 <div class="team-no">3팀</div>
-                                <div class="team-name">이모은</div>
+                                <div class="team-name">이름</div>
                             </div>
                             <div class="team-place">장소명<span class="team-floor">위치(층)</span></div>
                         </div>
                         <div class="team-cell">
                             <div class="team-cell-head">
                                 <div class="team-no">4팀</div>
-                                <div class="team-name">고빛나</div>
+                                <div class="team-name">이름</div>
                             </div>
                             <div class="team-place">장소명<span class="team-floor">위치(층)</span></div>
                         </div>
@@ -614,10 +613,10 @@
                 </div>
                 <!-- 동아리 가로 스크롤 섹션 -->
                 <div class="club-section-header">
-                    <div class="club-section-title">월광청년 동아리</div>
+                    <div class="club-section-title">청년부 소그룹 (동아리)</div>
                     <div class="club-section-desc">카드를 눌러 동아리 상세 정보를 확인해보세요.</div>
                 </div>
-                <!-- ★ 모든 동아리 아이콘을 단색 라인(SVG)으로 통일 ★ -->
+                <!-- 동아리 카드 (좌우로 밀어서 봅니다) -->
                 <div class="club-scroll-wrapper">
                     <div class="club-card bg-coral-peach" onclick="openClubModal('월등')">
                         <div class="club-icon-wrap">
@@ -701,7 +700,7 @@
                         <div class="info-row"><span class="info-label">국장</span><span>백영환 안수</span></div>
                     </div>
 
-                    <!-- ★ 연락처 그리드 강제 분할: 주소, 전화, FAX 완벽 정렬 -->
+                    <!-- 연락처 (라벨/값 2열 그리드) -->
                     <div class="contact-info">
                         <div class="contact-label">주소</div>
                         <div class="contact-value">전남광주 서구 염화로31번길 7</div>
@@ -724,14 +723,6 @@
                         <span class="sns-h-text">@wg_youth</span>
                     </a>
                     <div class="sns-divider"></div>
-                    <a href="http://www.youth-wk.or.kr/main/main.html" target="_blank" class="sns-h-item">
-                        <svg class="sns-h-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                        </svg>
-                        <span class="sns-h-text">youth-wk.or.kr</span>
-                    </a>
-                    <div class="sns-divider"></div>
                     <a href="https://youtube.com/@wgyouth?si=6l23h6XPbfCnQQmI" target="_blank" class="sns-h-item">
                         <svg class="sns-h-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path>
@@ -739,13 +730,21 @@
                         </svg>
                         <span class="sns-h-text">월광청년공동체TV</span>
                     </a>
+                    <div class="sns-divider"></div>
+                    <a href="http://www.youth-wk.or.kr/main/main.html" target="_blank" class="sns-h-item">
+                        <svg class="sns-h-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                        <span class="sns-h-text">youth-wk.or.kr</span>
+                    </a>
                 </div>
             </div>
             <!-- 4-2. 주간 소식 서브 뷰 -->
             <div id="sub-view-notice" class="sub-view"></div>
         </div>
     </div>
-    <!-- ★★★ 동아리 바텀 시트 모달 (팝업창) ★★★ -->
+    <!-- 동아리 상세 팝업 -->
     <div id="modal-overlay" class="modal-overlay" onclick="closeClubModal()"></div>
     <div id="bottom-sheet" class="bottom-sheet">
         <div class="bs-handle-wrap" onclick="closeClubModal()">
@@ -754,7 +753,7 @@
 
         <div class="bs-content-scroll">
             <div class="bs-img-placeholder">
-                <!-- 팝업창 사진 영역 라인 아이콘 교체 -->
+                <!-- 사진 영역 -->
                 <svg class="svg-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
                 <span>이곳에 동아리 사진을 넣어주세요</span>
             </div>
@@ -769,7 +768,6 @@
 
                 <div class="bs-info-box">
                     <div class="bs-info-row">
-                        <!-- 시간, 장소, 문의 100% SVG 라인 아이콘 적용 -->
                         <div class="bs-info-label"><svg class="svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 시간</div>
                         <div id="modal-club-time" class="bs-info-text">매주 토요일 오후 2시</div>
                     </div>
@@ -786,12 +784,12 @@
         </div>
     </div>
     <!-- =========================================
-         자바스크립트 최적화 및 모달 제어
+         자바스크립트
          ========================================= -->
     <script>
         /* =========================================================
-           ★★★ 매주 이 블록만 수정하면 주보 전체가 갱신됩니다 ★★★
-           아래 bulletin 객체 밖은 건드릴 필요가 없습니다.
+           매주 이 블록(bulletin)만 수정하면 주보 전체가 갱신됩니다.
+           아래 객체 바깥은 건드릴 필요가 없습니다.
            ========================================================= */
         const bulletin = {
             /* --- 발행 정보 --- */
@@ -805,10 +803,10 @@
                [순서명, 담당/내용] 형태로 적으면 됩니다.
                한 칸에 여러 줄이 필요하면 배열로 넣으세요. (예: 찬양 곡 목록)   */
             orderBefore: [
-                ['예배의 부름', '남믿음 팀장(2팀)'],
+                ['예배의 부름', '인도자'],
                 ['신앙고백', '사도신경'],
                 ['경배와 찬양', ['내 안에 가장 귀한 것', 'winning all', 'with me + 예수 열방의 소망', '우리 주 하나님']],
-                ['대표기도', '노지원 순장(8팀)'],
+                ['대표기도', '담당자'],
                 ['말씀선포', '박은진 목사']
             ],
             sermon: {
@@ -816,23 +814,22 @@
                 bible: '사도행전 10:1-2'
             },
             orderAfter: [
-                ['봉헌', '김신효 자매(미디어팀)'],
+                ['봉헌', '담당자'],
                 ['축도', '박은진 목사'],
                 ['광고', '박은진 목사']
             ],
             /* --- 다음 주 섬김 --- */
             nextWeek: [
                 { header: '다음 주 예배위원', items: [
-                    ['대표기도', '이다연 순장(8팀)'],
+                    ['대표기도', '담당자'],
                     ['말씀선포', '박은진 목사'],
-                    ['봉헌', '오혜연 자매(미디어팀)']
+                    ['봉헌', '담당자']
                 ]},
                 { header: '다음 주 중보기도', items: [
-                    ['기도인도', '오혜연 자매(미디어팀)']
+                    ['기도인도', '담당자']
                 ]}
             ],
             /* --- 아름다운 순 --- */
-            sermonSummary: '이곳에 이번 주 설교의 핵심 내용을 요약해서 적어주시면 됩니다.',
             shareQuestions: [
                 '신앙생활 하면서 교회에서 혹은 여러분의 삶의 자리에서 믿음을 지키며 살아갈 때 여러분을 가장 어렵게 하는 것은 무엇인가요?',
                 '그런 상황 속에서 마음을 나누거나, 여러분이 다시 믿음을 붙들 수 있도록 힘이 되어준 믿음의 동역자가 있었나요?',
@@ -843,8 +840,10 @@
                  title     : 소식 제목 (번호는 자동)
                  lines     : 본문 줄 목록
                  table     : { head: [...], rows: [[...], [...]] }
+                 pairs     : [['부서', '이름'], ...]  담당자 명단을 한 줄로 이어 붙임
                  image     : { src: '이미지주소', alt: '설명', caption: '사진 설명(선택)' }
-                 highlight : 빨간색 강조 문구                              */
+                 highlight : 빨간색 강조 문구
+                 note      : 강조 문구 뒤에 붙는 일반 문구 (문의처 등)      */
             notices: [
                 {
                     title: '청년부 여름 수련회 신청',
@@ -859,27 +858,24 @@
                     title: '청년공동체 함께 성경 읽기',
                     lines: [
                         '이번 주는 에스겔 43~48장, 에스라 1~6장을 함께 읽습니다'
-                    ],
-                },   
-                {
-                   title: '의료상담 및 외국인 무료진료',
+                    ]
+                }
+                ,{
+                    title: '의료상담 및 외국인 무료진료',
                     lines: [
                         '일시: 주일 오전 10:30 ~ 11:30',
                         '장소: 메디컬센터(선교센터 지하 1층)'
                     ],
-                    table: {
-                        head: ['8/23', '담당'],
-                        rows: [
-                            ['정형외과', '정주철'],
-                            ['이비인후과', '김주영'],
-                            ['간호팀', '김정이, 류지은'],
-                            ['치과', '박재완'],
-                            ['치과위생사', '김애옥'],
-                            ['약사', '김효경, 허진아'],
-                            ['행정', '이희선']
-                        ]
-                    },
-                     highlight: '함께 봉사할 의료인을 수시로 모집 중입니다.',
+                    pairs: [
+                        ['정형외과', '정주철'],
+                        ['이비인후과', '김주영'],
+                        ['간호팀', '김정이, 류지은'],
+                        ['치과', '박재완'],
+                        ['치과위생사', '김애옥'],
+                        ['약사', '김효경, 허진아'],
+                        ['행정', '이희선']
+                    ],
+                    highlight: '함께 봉사할 의료인을 수시로 모집 중입니다.',
                     note: '문의: 메디컬센터 (담당자)'
                 }
                 /* 표를 넣는 예시
@@ -952,9 +948,6 @@
                     group.items.map(row => renderOrderRow('next-week-item', row)).join('')
                 ).join('');
             // 아름다운 순
-            document.getElementById('sermon-summary').innerHTML =
-                `<div class="card-title">설교 요약</div>` +
-                `<p class="card-desc">${esc(bulletin.sermonSummary)}</p>`;
             document.getElementById('sermon-questions').innerHTML =
                 `<div class="card-title">삶 속으로</div>` +
                 `<ol class="share-list">${bulletin.shareQuestions.map(q => `<li>${esc(q)}</li>`).join('')}</ol>`;
@@ -963,6 +956,10 @@
                 let body = '';
                 if (n.lines && n.lines.length) {
                     body += `<div class="card-desc">${n.lines.map(l => `- ${esc(l)}`).join('<br>')}</div>`;
+                }
+                if (n.pairs && n.pairs.length) {
+                    body += `<div class="pair-flow">` + n.pairs.map(([k, v]) =>
+                        `<b>${esc(k)}</b> ${esc(v)}`).join('<span class="sep">|</span>') + `</div>`;
                 }
                 if (n.table && n.table.rows && n.table.rows.length) {
                     const head = (n.table.head && n.table.head.length)
@@ -979,11 +976,11 @@
                 }
                 if (n.highlight) {
                     body += `<div class="card-desc notice-highlight-wrap">` +
-                        `<span class="notice-highlight">* ${esc(n.highlight)}</span></div>`;
+                            `<span class="notice-highlight">* ${esc(n.highlight)}</span></div>`;
                 }
-                if (n.note) {                                                          // ← 추가
-                    body += `<div class="card-desc notice-highlight-wrap">${esc(n.note)}</div>`;   // ← 추가
-                }                                                                      // ← 추가
+                if (n.note) {
+                    body += `<div class="card-desc notice-highlight-wrap">${esc(n.note)}</div>`;
+                }
                 return `<div class="card"><div class="card-title">${i + 1}. ${esc(n.title)}</div>${body}</div>`;
             };
             const noticeHtml = bulletin.notices.length
@@ -1002,32 +999,30 @@
         let isClicking = false;
         /* 스크롤 스파이가 섹션을 인식하는 기준 여백 */
         const SCROLL_SPY_OFFSET = 40;
-        /* ★ 고정 대제목의 확장/축소 높이를 미리 측정해 본문 여백에 반영 */
-        let heroExpandedH = 0, heroCompactH = 0;
-       function measureHero() {
-        const heroSub = document.getElementById('hero-sub');
-        const prevTransition = pageHero.style.transition;
-        const prevSubTransition = heroSub.style.transition;
-        pageHero.style.transition = 'none'; // 측정 중 애니메이션 간섭 방지
-        heroSub.style.transition = 'none';                    // ← 추가
-        const wasCompact = pageHero.classList.contains('compact');
-        pageHero.classList.remove('compact');
-        heroExpandedH = pageHero.offsetHeight;
-        pageHero.classList.add('compact');
-        heroCompactH = pageHero.offsetHeight;
-        if (!wasCompact) pageHero.classList.remove('compact');
-        pageHero.offsetHeight; // 강제 리플로우로 transition 복원 시점 분리
-        pageHero.style.transition = prevTransition;
-        heroSub.style.transition = prevSubTransition;         // ← 추가
-        applyHeroSpacing();
-      }
-        /* ★ 본문 위 여백은 '펼친 상태' 높이로 항상 고정한다.
-           예전처럼 축소/확대에 맞춰 여백을 같이 줄였다 늘리면,
-           스크롤을 내렸다가 다시 올릴 때 여백이 늘어나는 타이밍과
-           헤더가 펼쳐지는 타이밍이 어긋나 제목("나를 복음으로!!")이
-           헤더 밑으로 파고들어 잘려 보였음.
-           여백을 고정하면 맨 위에서는 항상 헤더 바로 아래에서 본문이 시작하고,
-           스크롤을 내렸을 때는 축소된 헤더가 본문 위를 덮는 일반적인 동작이 된다. */
+        /* 고정 헤더의 높이를 재서 본문 위 여백에 반영 */
+        let heroExpandedH = 0;
+        function measureHero() {
+            /* 측정하는 동안 헤더와 날짜 줄(.hero-sub)의 애니메이션을 모두 꺼야 합니다.
+               날짜 줄에는 max-height 애니메이션이 걸려 있어서, 그대로 재면 접히는
+               중간 높이가 잡히고 본문 위 여백이 모자라져 제목이 헤더에 가립니다.
+               휴대폰 주소창이 오르내릴 때마다 resize 로 다시 불리는 함수라 중요합니다. */
+            const heroSub = document.getElementById('hero-sub');
+            const prevTransition = pageHero.style.transition;
+            const prevSubTransition = heroSub.style.transition;
+            pageHero.style.transition = 'none'; // 측정 중 애니메이션 간섭 방지
+            heroSub.style.transition = 'none';
+            const wasCompact = pageHero.classList.contains('compact');
+            pageHero.classList.remove('compact');
+            heroExpandedH = pageHero.offsetHeight;
+            if (wasCompact) pageHero.classList.add('compact');
+            pageHero.offsetHeight; // 강제 리플로우로 transition 복원 시점 분리
+            pageHero.style.transition = prevTransition;
+            heroSub.style.transition = prevSubTransition;
+            applyHeroSpacing();
+        }
+        /* 본문 위 여백은 헤더의 '펼친 상태' 높이로 고정합니다.
+           헤더가 줄어들 때 여백까지 같이 줄이면 두 애니메이션의 타이밍이 어긋나
+           제목이 헤더 밑으로 파고듭니다. */
         function applyHeroSpacing() {
             // +2px 안전 여백: 기기마다 폰트 렌더링이 반 픽셀 단위로 미세하게 달라지는 경우를 흡수
             appContainer.style.paddingTop = (heroExpandedH + 2) + 'px';
@@ -1035,10 +1030,9 @@
         window.addEventListener('load', measureHero);
         window.addEventListener('resize', measureHero);
         measureHero();
-        /* ★ 핵심 수정: Pretendard 웹폰트가 실제로 적용된 뒤 다시 측정.
-           'load' 이벤트는 폰트 파일 자체의 로딩 완료를 보장하지 않아서,
-           느린 네트워크(카카오톡 인앱 브라우저 등)에서는 폰트가 늦게 적용되며
-           헤더 높이가 바뀌는데 본문 여백은 그 이전 값에 고정되어 겹쳐 보이는 문제가 있었음 */
+        /* 웹폰트가 적용된 뒤 한 번 더 측정합니다. 'load' 이벤트는 폰트 로딩 완료를
+           보장하지 않아서, 느린 네트워크(카카오톡 인앱 브라우저 등)에서는
+           폰트가 늦게 적용되며 헤더 높이가 나중에 바뀝니다. */
         if (document.fonts && document.fonts.ready) {
             document.fonts.ready.then(measureHero);
         }
@@ -1089,7 +1083,9 @@
         /* 스크롤 이벤트 쓰로틀링 (requestAnimationFrame) */
         let scrollTicking = false;
         function handleScroll() {
-            // 1) 대제목 축소 토글 (경계에서 떨리지 않도록 확장/축소 기준값을 다르게 둠)
+            /* 1) 대제목 축소 토글. 경계에서 떨리지 않도록 확장/축소 기준값을 다르게 둡니다.
+               축소 기준(10)은 헤더 아래 여유(약 22px)보다 작아야 합니다.
+               이 값을 키우면 그 사이에 제목이 펼쳐진 헤더에 가려집니다. */
             const isCompact = pageHero.classList.contains('compact');
             if (!isCompact && window.scrollY > 10) {
                 pageHero.classList.add('compact');
@@ -1129,7 +1125,7 @@
         });
         /* 동아리 데이터 맵핑 */
         const clubsData = {
-            '월등': { type: '등산 동아리', desc: '월등은 매월 한 번씩 함께 산에 오르며 체력을 단련하고 자연 속에서 교제하는 모임입니다. 초보자도 쉽게 오를 수 있는 코스 위주로 진행되니 부담 없이 지원해주세요!', time: '매월 셋째 주 토요일 오전', loc: '광주 인근 산 (일정별 안내)', leader: '김월광 (010-0000-0000)' },
+            '월등': { type: '등산 동아리', desc: '월등은 매월 한 번씩 함께 산에 오르며 체력을 단련하고 자연 속에서 교제하는 모임입니다. 초보자도 쉽게 오를 수 있는 코스 위주로 진행되니 부담 없이 지원해주세요!', time: '매월 셋째 주 토요일 오전', loc: '광주 인근 산 (일정별 안내)', leader: '이름 (010-0000-0000)' },
             '아리엘': { type: '몸찬양 동아리', desc: '아리엘은 아름다운 몸짓으로 하나님을 찬양하는 워십 댄스 동아리입니다. 춤이나 무용 경험이 없어도 찬양을 사모하는 마음만 있다면 누구나 환영합니다.', time: '매주 주일 예배 후', loc: '비전홀', leader: '이름 (010-0000-0000)' },
             '엎진살': { type: '풋살 동아리', desc: '엎진살은 풋살을 통해 땀 흘리며 친목을 다지는 스포츠 동아리입니다. 뛰어난 실력보다는 함께 웃으며 즐겁게 뛰는 것을 목표로 합니다!', time: '격주 토요일 오후', loc: '교회 인근 풋살장', leader: '이름 (010-0000-0000)' },
             'Psalm': { type: '밴드 동아리', desc: 'Psalm(시편)은 악기와 노래로 찬양의 기쁨을 나누는 밴드 동아리입니다. 정기적인 합주를 통해 음악적 재능을 나누고 영적으로 함께 성장해 나갑니다.', time: '매주 금요일 저녁', loc: '본당 지하 합주실', leader: '이름 (010-0000-0000)' },
@@ -1162,7 +1158,7 @@
             // 배경 스크롤 잠금 해제
             document.body.classList.remove('modal-open');
         }
-        /* ★★★ 바텀 시트 스와이프(드래그 다운)로 닫기 기능 추가 ★★★ */
+        /* 바텀 시트를 아래로 끌어서 닫기 */
         const bottomSheet = document.getElementById('bottom-sheet');
         const scrollContent = document.querySelector('.bs-content-scroll');
         let startY = 0;
