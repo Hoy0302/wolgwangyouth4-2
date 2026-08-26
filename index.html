@@ -980,19 +980,23 @@
         const SCROLL_SPY_OFFSET = 40;
         /* ★ 고정 대제목의 확장/축소 높이를 미리 측정해 본문 여백에 반영 */
         let heroExpandedH = 0, heroCompactH = 0;
-        function measureHero() {
-            const prevTransition = pageHero.style.transition;
-            pageHero.style.transition = 'none'; // 측정 중 애니메이션 간섭 방지
-            const wasCompact = pageHero.classList.contains('compact');
-            pageHero.classList.remove('compact');
-            heroExpandedH = pageHero.offsetHeight;
-            pageHero.classList.add('compact');
-            heroCompactH = pageHero.offsetHeight;
-            if (!wasCompact) pageHero.classList.remove('compact');
-            pageHero.offsetHeight; // 강제 리플로우로 transition 복원 시점 분리
-            pageHero.style.transition = prevTransition;
-            applyHeroSpacing();
-        }
+       function measureHero() {
+        const heroSub = document.getElementById('hero-sub');
+        const prevTransition = pageHero.style.transition;
+        const prevSubTransition = heroSub.style.transition;
+        pageHero.style.transition = 'none'; // 측정 중 애니메이션 간섭 방지
+        heroSub.style.transition = 'none';                    // ← 추가
+        const wasCompact = pageHero.classList.contains('compact');
+        pageHero.classList.remove('compact');
+        heroExpandedH = pageHero.offsetHeight;
+        pageHero.classList.add('compact');
+        heroCompactH = pageHero.offsetHeight;
+        if (!wasCompact) pageHero.classList.remove('compact');
+        pageHero.offsetHeight; // 강제 리플로우로 transition 복원 시점 분리
+        pageHero.style.transition = prevTransition;
+        heroSub.style.transition = prevSubTransition;         // ← 추가
+        applyHeroSpacing();
+      }
         /* ★ 본문 위 여백은 '펼친 상태' 높이로 항상 고정한다.
            예전처럼 축소/확대에 맞춰 여백을 같이 줄였다 늘리면,
            스크롤을 내렸다가 다시 올릴 때 여백이 늘어나는 타이밍과
