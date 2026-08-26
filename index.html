@@ -935,7 +935,7 @@
                 `<div class="card-title">설교 요약</div>` +
                 `<p class="card-desc">${esc(bulletin.sermonSummary)}</p>`;
             document.getElementById('sermon-questions').innerHTML =
-                `<div class="card-title">셀 나눔 질문</div>` +
+                `<div class="card-title">삶 속으로</div>` +
                 `<ol class="share-list">${bulletin.shareQuestions.map(q => `<li>${esc(q)}</li>`).join('')}</ol>`;
             // 주간 소식
             const renderNotice = (n, i) => {
