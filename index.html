@@ -288,7 +288,7 @@
         .next-week-item .order-title { font-weight: 600; font-size: 15px; line-height: 1.4; color: var(--text-main); flex-shrink: 0; }
         .next-week-item .order-detail { color: var(--text-sub); font-size: 14px; text-align: right; }
         .share-list { padding-left: 20px; color: var(--text-sub); font-size: 15px; line-height: 1.5; margin-top: 10px; }
-        .share-list li { margin-bottom: 15px; }
+        .share-list li { margin-bottom: 23px; }
         .news-header { text-align: center; padding: 0 10px 15px 10px; }
         .news-theme { font-size: 21px; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; margin: 0 0 10px 0; line-height: 1.3; }
         .sub-view { display: none; animation: fadeIn 0.3s; padding: 20px 20px 20px 20px; }
@@ -1063,10 +1063,10 @@
         function handleScroll() {
             // 1) 대제목 축소 토글 (경계에서 떨리지 않도록 확장/축소 기준값을 다르게 둠)
             const isCompact = pageHero.classList.contains('compact');
-            if (!isCompact && window.scrollY > 40) {
+            if (!isCompact && window.scrollY > 10) {
                 pageHero.classList.add('compact');
                 applyHeroSpacing();
-            } else if (isCompact && window.scrollY < 12) {
+            } else if (isCompact && window.scrollY < 3) {
                 pageHero.classList.remove('compact');
                 applyHeroSpacing();
             }
