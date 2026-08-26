@@ -860,6 +860,7 @@
                     lines: [
                         '이번 주는 에스겔 43~48장, 에스라 1~6장을 함께 읽습니다'
                     ],
+                },   
                 {
                    title: '의료상담 및 외국인 무료진료',
                     lines: [
@@ -978,8 +979,11 @@
                 }
                 if (n.highlight) {
                     body += `<div class="card-desc notice-highlight-wrap">` +
-                            `<span class="notice-highlight">* ${esc(n.highlight)}</span></div>`;
+                        `<span class="notice-highlight">* ${esc(n.highlight)}</span></div>`;
                 }
+                if (n.note) {                                                          // ← 추가
+                    body += `<div class="card-desc notice-highlight-wrap">${esc(n.note)}</div>`;   // ← 추가
+                }                                                                      // ← 추가
                 return `<div class="card"><div class="card-title">${i + 1}. ${esc(n.title)}</div>${body}</div>`;
             };
             const noticeHtml = bulletin.notices.length
