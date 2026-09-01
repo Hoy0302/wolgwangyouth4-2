@@ -3,45 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <!-- 검색 엔진 색인 차단 (링크를 아는 사람만 접속) -->
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
-    <title>청년예배 주보</title>
-    <!-- 웹 폰트 (Pretendard) -->
+    <title>월광청년 주보</title>
+
+    <link rel="icon" href="favicon.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="월광교회 청년부">
+    <meta property="og:title" content="월광청년 주보">
+    <meta property="og:description" content="이번 주 예배순서 · 나눔 · 소식">
+    <meta property="og:url" content="https://wgyouth.netlify.app/">
+    <meta property="og:image" content="https://wgyouth.netlify.app/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
     <style>
-        /* =========================================
-           1. 색상 변수
-           ========================================= */
+
         :root {
-            /* 맑고 따뜻한 느낌을 주는 내부 페이지 바탕색 */
             --bg-color: #F6F8FA;
 
-            /* 인트로의 페일 블루(#CBD7EF)와 이어지는 포인트 컬러.
-               타임라인 점, 테두리 같은 '장식'에만 사용 */
             --primary-color: #8BA6D3;
             --primary-light: #EEF2F6;
 
-            /* 포인트 컬러를 '글자'로 쓸 때는 이 진한 톤을 사용.
-               연한 #8BA6D3 은 본문 크기 글씨로 쓰면 대비가 부족해 잘 안 읽힘. */
             --primary-deep: #4C6D9F;
 
-            /* 완전한 검정 대신 딥 네이비 */
             --text-main: #2C3E50;
 
-            /* 부드러운 쿨 그레이 톤의 서브 텍스트 */
             --text-sub: #5C6F82;
-            /* 보조 텍스트. 이보다 연하게 하면 밝은 곳에서 잘 안 보임 */
+
             --text-muted: #647383;
 
             --card-bg: #FFFFFF;
         }
 
-        /* =========================================
-           2. 전체 레이아웃 및 초기화
-           ========================================= */
         html { scroll-behavior: smooth; }
         body {
-            /* 앱 바깥 여백 (PC 등 넓은 화면에서 보이는 부분) */
             background-color: #E6EAEE;
             color: var(--text-main);
             font-size: 15px;
@@ -53,10 +51,8 @@
             -webkit-text-size-adjust: 100%;
         }
         body.modal-open { overflow: hidden; height: 100%; }
-        button { -webkit-tap-highlight-color: transparent; }
-        a { -webkit-tap-highlight-color: transparent; }
+        button, a { -webkit-tap-highlight-color: transparent; }
 
-        /* 공통 SVG 아이콘 클래스 */
         .svg-icon {
             width: 100%; height: 100%;
             stroke: currentColor;
@@ -74,7 +70,6 @@
             overflow-x: hidden;
             min-height: 100vh;
             padding-bottom: 150px;
-            padding-top: 0;
         }
         .view-container { display: none; animation: fadeIn 0.3s; }
         .view-container.active { display: block; }
@@ -82,18 +77,30 @@
             from { opacity: 0; transform: translateY(5px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        /* =========================================
-           2-1. 상단 대제목 (스크롤하면 그 자리에서 축소)
-           * 여백을 키우면 헤더가 높아집니다. 헤더가 높아지면 그 아래
-             첫 제목이 가려질 수 있으니 handleScroll 의 축소 기준값도 함께 확인하세요.
-           ========================================= */
+
+        #view-news { animation: fadeInSoft 0.3s; }
+        @keyframes fadeInSoft {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes popUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes popUpFixed {
+            from { opacity: 0; transform: translateX(-50%) translateY(16px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
         .page-hero {
             position: fixed; top: 0; left: 50%; transform: translateX(-50%);
             width: 100%; max-width: 480px; z-index: 1500;
             box-sizing: border-box;
             text-align: center;
             padding: calc(24px + env(safe-area-inset-top)) 22px 15px 22px;
-            background: rgba(246, 248, 250, 0.85); /* --bg-color 와 같은 색, 반투명 */
+            background: rgba(246, 248, 250, 0.85);
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
             border-bottom: 1px solid rgba(0,0,0,0);
@@ -105,7 +112,7 @@
             line-height: 1.2; margin: 0;
             transition: font-size 0.28s ease, letter-spacing 0.28s ease;
         }
-        /* 본문 말씀(.theme-verse)과 같은 14px */
+
         .hero-sub {
             font-size: 14px; font-weight: 500; color: var(--text-muted);
             letter-spacing: 0.2px;
@@ -121,9 +128,7 @@
         }
         .page-hero.compact .hero-title { font-size: 16px; letter-spacing: 0.4px; }
         .page-hero.compact .hero-sub { max-height: 0; opacity: 0; margin-top: 0; }
-        /* =========================================
-           3. 인트로 화면 (그라데이션 + 노이즈 질감)
-           ========================================= */
+
         #view-intro {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -135,9 +140,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 40px 30px;
-            padding-top: calc(40px + env(safe-area-inset-top));
-            padding-bottom: calc(40px + env(safe-area-inset-bottom));
+            padding: calc(40px + env(safe-area-inset-top)) 30px calc(40px + env(safe-area-inset-bottom)) 30px;
             box-sizing: border-box;
             transition: opacity 0.5s ease;
         }
@@ -156,28 +159,19 @@
         #view-intro.fade-out { opacity: 0; pointer-events: none; }
         .intro-content { text-align: center; margin-bottom: 40px; position: relative; z-index: 1; }
         .intro-date-badge { display: inline-block; background-color: rgba(255, 255, 255, 0.7); color: var(--text-sub); font-size: 14px; font-weight: 700; padding: 6px 14px; border-radius: 20px; margin-bottom: 35px; box-shadow: 0 2px 6px rgba(0,0,0,0.03); }
-        /* 밝은 배경 위에 놓이므로 진한 톤을 사용 */
+
         .intro-subtitle { font-size: 14px; font-weight: 700; color: var(--primary-deep); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 15px; }
         .intro-main-title { font-size: 34px; font-weight: 800; color: var(--text-main); line-height: 1.3; margin-bottom: 20px; }
         .intro-desc { font-size: 14px; color: var(--text-sub); line-height: 1.6; word-break: keep-all; }
 
-        /* 유리 질감 버튼. 배경이 밝아서 글씨는 딥 네이비 */
         .intro-btn { position: relative; z-index: 1; width: 100%; max-width: 320px; background-color: rgba(255, 255, 255, 0.25); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.6); border-top: 1px solid rgba(255, 255, 255, 0.9); color: var(--text-main); font-size: 16px; font-weight: 700; padding: 18px 0; border-radius: 30px; cursor: pointer; box-shadow: 0 15px 35px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.6); transition: transform 0.15s ease-in-out; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .intro-btn:active { transform: scale(0.95); background-color: rgba(255, 255, 255, 0.4); }
-        /* =========================================
-           4. 하단 플로팅 메인 메뉴 & 그라데이션 마스크
-           ========================================= */
-        /* 하단을 배경색으로 서서히 덮어, 메뉴 뒤로 지나가는 본문을 가려줌 */
+
         .bottom-gradient-mask { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; height: calc(160px + env(safe-area-inset-bottom)); background: linear-gradient(to top, rgba(246,248,250, 1) 35%, rgba(246,248,250, 0.8) 65%, rgba(246,248,250, 0) 100%); pointer-events: none; z-index: 998; }
 
-        /* 메뉴 배경 네이비(#2C3E50)는 전체 톤을 잡아주는 색이라 그대로 둡니다.
-           grid 1:1:1 로 칸을 고정해서, 어느 탭을 눌러도 세 탭의 자리가 움직이지 않습니다.
-           글씨 14px · 자간 -0.4px · 아이콘 15px 로 압축하고 폭을 88%로 잡아
-           '아름다운 순 + 아이콘'이 한 칸에 겨우 들어갑니다.
-           글씨를 키우거나 탭 이름을 늘리면 넘치니 주의하세요. */
         .tabs-menu {
             position: fixed; bottom: calc(15px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%);
-            width: 88%; /* 기본 폭을 살짝 넓혀 글씨 공간 확보 */
+            width: 88%;
             max-width: 400px;
             background-color: #2C3E50; border-radius: 50px;
             display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;
@@ -191,13 +185,11 @@
             cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-            /* 줄바꿈 방지 + 자간을 좁혀 한 칸에 들어가게 함 */
             white-space: nowrap;
             letter-spacing: -0.4px;
         }
         .nav-item .nav-icon { display: none; width: 15px; height: 15px; flex-shrink: 0; }
 
-        /* 활성 탭 (칸 너비는 그대로, 배경과 아이콘만 바뀜) */
         .nav-item.active {
             background-color: #FFFFFF; color: var(--text-main);
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -205,39 +197,29 @@
         .nav-item.active .nav-icon { display: inline-block; }
         .nav-item.active span { font-weight: 800; }
 
-        /* 작은 폰(아이폰 미니, 갤럭시 플립 커버 화면 등) 대응 */
-        @media (max-width: 380px) {
-            /* 좁은 폰에서는 메뉴 전체 가로폭을 넓게 써서 숨통을 틔워줌 */
-            .tabs-menu { width: 95%; padding: 6px; gap: 2px; }
-            .nav-item { font-size: 12.5px; letter-spacing: -0.8px; gap: 3px; padding: 10px 0; }
-            .nav-item .nav-icon { width: 14px; height: 14px; }
-            /* 서브 탭 글씨도 같은 기준으로 함께 줄여줌 (폭은 아래 5번 섹션에서 맞춤) */
-            .sub-tab-btn { font-size: 13.5px; padding: 5px 8px 8px 8px; }
-        }
-        /* =========================================
-           5. 하단 플로팅 서브 탭
-           ========================================= */
         .sub-tabs {
             position: fixed; bottom: calc(85px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%);
-            /* 아래 메뉴(.tabs-menu)와 좌우 끝선을 맞추기 위해 같은 88% 사용 */
+
             width: 88%; max-width: 400px; z-index: 999;
             display: grid; grid-template-columns: repeat(2, 1fr);
             text-shadow: 0 0 10px rgba(255,255,255,1), 0 0 20px rgba(255,255,255,0.9);
+
+            animation: popUpFixed 0.34s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
-        /* justify-self: center 로 버튼 폭을 글자 폭에 맞춥니다.
-           그래야 아래 밑줄(::after)이 칸 절반이 아니라 글자 길이만큼만 그려집니다. */
+
         .sub-tab-btn { justify-self: center; max-width: 100%; padding: 5px 10px 8px 10px; background-color: transparent; color: var(--text-muted); font-weight: 600; font-size: 15.5px; border: none; border-radius: 0; cursor: pointer; position: relative; transition: color 0.2s ease; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; word-break: keep-all; }
-        .sub-tab-btn.active { background-color: transparent; color: var(--text-main); font-weight: 800; box-shadow: none; }
+        .sub-tab-btn.active { color: var(--text-main); font-weight: 800; }
         .sub-tab-btn::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 0; height: 3px; background-color: var(--text-main); border-radius: 3px; transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 5px rgba(255,255,255,0.8); }
         .sub-tab-btn.active::after { width: calc(100% - 20px); }
-        /* 좁은 화면에서는 메뉴가 95%로 넓어지므로 서브 탭도 같이 넓혀 끝선을 맞춤
-           (.sub-tabs 기본 규칙보다 뒤에 와야 적용됨) */
+
         @media (max-width: 380px) {
+            .tabs-menu { width: 95%; padding: 6px; gap: 2px; }
+            .nav-item { font-size: 12.5px; letter-spacing: -0.8px; gap: 3px; padding: 10px 0; }
+            .nav-item .nav-icon { width: 14px; height: 14px; }
             .sub-tabs { width: 95%; }
+            .sub-tab-btn { font-size: 13.5px; padding: 5px 8px 8px 8px; }
         }
-        /* =========================================
-           6. 공통 컨텐츠 스타일
-           ========================================= */
+
         .theme-verse { font-size: 14px; color: var(--text-sub); line-height: 1.6; margin: 0; word-break: keep-all; }
         .section-header-wrap { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 15px; padding: 0 5px; }
         .section-title { font-size: 20px; font-weight: 700; color: var(--primary-deep); line-height: 1.4; margin: 0; }
@@ -246,15 +228,22 @@
         .mt-15 { margin-top: 15px; }
         .no-border { border-bottom: none !important; padding-bottom: 8px !important; }
         .card { background-color: var(--card-bg); border-radius: 20px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 15px; text-align: left; }
-        .card-title { font-weight: 700; font-size: 17px; line-height: 1.4; margin-bottom: 10px; color: var(--text-main); }
-        .card-desc { font-size: 15px; color: var(--text-sub); line-height: 1.6; margin: 0; }
+
+        .card-title { font-weight: 700; font-size: 17px; line-height: 1.4; margin-bottom: 10px; color: var(--text-main); word-break: keep-all; }
+        .card-desc { font-size: 15px; color: var(--text-sub); line-height: 1.6; margin: 0; word-break: keep-all; }
+
+        .notice-line { display: flex; align-items: baseline; gap: 5px; }
+        .notice-line > .notice-dash { flex: 0 0 auto; }
+        .notice-line > .notice-line-text { flex: 1 1 auto; min-width: 0; }
         .notice-highlight { color: #E74C3C; font-weight: 600; }
+
+        .text-em { color: var(--primary-deep); font-weight: 700; }
         .notice-highlight-wrap { margin-top: 10px; }
         .notice-table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 12px; table-layout: fixed; }
         .notice-table th, .notice-table td { border: 1px solid #E0E0E0; padding: 10px 8px; text-align: center; word-break: keep-all; line-height: 1.4; }
         .notice-table th { background-color: var(--primary-light); font-weight: 700; color: var(--text-main); font-size: 13px; }
         .notice-table td { color: var(--text-sub); }
-        /* 주간 소식 - 담당자 명단을 한 줄로 이어 붙여 보여줌 (부서명을 굵게) */
+
         .pair-flow { margin-top: 10px; font-size: 14px; line-height: 1.9; color: var(--text-sub); word-break: keep-all; }
         .pair-flow b { color: var(--text-main); font-weight: 700; }
         .pair-flow .sep { color: #C9D2DC; margin: 0 6px; }
@@ -270,8 +259,9 @@
         .section-block.active .timeline-dot { background-color: var(--primary-color); border-color: var(--primary-color); box-shadow: 0 0 0 5px rgba(137, 180, 196, 0.25); }
         .order-item { display: flex; justify-content: space-between; padding: 13px 0; border-bottom: 1px solid #F6F6F6; }
         .order-item:last-child { border-bottom: none; }
-        .order-title { font-weight: 600; font-size: 15px; line-height: 1.4; flex-shrink: 0; }
-        .order-detail { color: var(--text-sub); font-size: 15px; text-align: right; line-height: 1.6; }
+
+        .order-title { font-weight: 600; font-size: 15px; line-height: 1.4; flex-shrink: 0; word-break: keep-all; }
+        .order-detail { color: var(--text-sub); font-size: 15px; text-align: right; line-height: 1.6; word-break: keep-all; }
 
         .sermon-box {
             background: radial-gradient(circle at center, #F8FAFC 20%, #EEF2F6 100%);
@@ -284,88 +274,125 @@
         .next-week-header { font-size: 16px; font-weight: 700; color: var(--text-main); padding-bottom: 5px; margin-bottom: 3px; border-bottom: 2px solid var(--primary-light); display: flex; align-items: center; }
         .next-week-item { display: flex; justify-content: space-between; padding: 11px 0; border-bottom: 1px solid #F6F6F6; }
         .next-week-item:last-child { border-bottom: none; }
-        .next-week-item .order-title { font-weight: 600; font-size: 15px; line-height: 1.4; color: var(--text-main); flex-shrink: 0; }
-        .next-week-item .order-detail { color: var(--text-sub); font-size: 14px; text-align: right; }
+        .next-week-item .order-detail { font-size: 14px; }
         .share-list { padding-left: 20px; color: var(--text-sub); font-size: 15px; line-height: 1.5; margin-top: 10px; }
         .share-list li { margin-bottom: 23px; }
         .news-header { text-align: center; padding: 0 10px 15px 10px; }
         .news-theme { font-size: 21px; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; margin: 0 0 10px 0; line-height: 1.3; }
-        .sub-view { display: none; animation: fadeIn 0.3s; padding: 20px 20px 20px 20px; }
+
+        .sub-view { display: none; animation: popUp 0.34s cubic-bezier(0.2, 0.8, 0.2, 1); padding: 20px 20px 20px 20px; }
         .sub-view.active { display: block; }
         .guide-table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 5px; }
         .guide-table th, .guide-table td { border: 1px solid #E0E0E0; padding: 11px 10px; text-align: center; }
-        .guide-table th { background-color: #F8F9FA; font-weight: 600; width: 38%; }
+
+        .guide-table th { background-color: #F8F9FA; font-weight: 600; width: 1%; white-space: nowrap; }
         .guide-location { display: block; font-size: 11px; font-weight: 500; color: var(--text-muted); margin-top: 4px; }
-        .guide-list { padding-left: 20px; margin: 8px 0 0 0; color: var(--text-sub); font-size: 15px; line-height: 1.5; }
+        .guide-list { padding-left: 20px; margin: 8px 0 0 0; color: var(--text-sub); font-size: 15px; line-height: 1.5; word-break: keep-all; }
         .guide-list li { margin-bottom: 4px; }
 
-        .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px 8px; margin-top: 8px; }
-        .team-cell { background: #F8F9FA; border-radius: 14px; padding: 14px 8px 12px 8px; text-align: center; }
-        .team-cell-head { display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 10px; }
-        .team-no { flex-shrink: 0; width: 24px; height: 24px; border-radius: 8px; background: var(--primary-light); color: var(--text-main); font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
-        .team-name { font-size: 11.5px; font-weight: 600; color: var(--text-sub); max-width: 64px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .team-cell .team-place { font-size: 12.5px; font-weight: 700; color: var(--text-main); line-height: 1.3; word-break: keep-all; }
-        .team-cell .team-floor { display: block; font-size: 11px; font-weight: 500; color: var(--text-muted); margin-top: 3px; }
-        /* =========================================
-           7. 동아리 섹션
-           ========================================= */
-        .club-section-header { padding: 0 20px; margin-top: 25px; margin-bottom: 10px; }
+        .team-grid {
+            display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px 10px; margin-top: 15px; padding-bottom: 5px;
+        }
+
+        @media (max-width: 359px) {
+            .team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+
+        .team-cell {
+            background: #FFFFFF;
+
+            background-image: linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 100%);
+            border-radius: 18px;
+
+            padding: 18px 6px;
+            text-align: center;
+
+            box-shadow:
+                6px 6px 14px rgba(166, 180, 200, 0.35),
+                -4px -4px 12px rgba(255, 255, 255, 0.9);
+            border: 1px solid #F0F4F8;
+        }
+
+        .team-cell-head {
+            display: flex; align-items: baseline; justify-content: center; gap: 4px;
+            margin-bottom: 8.1px;
+        }
+        .team-no {
+            font-size: 12px; font-weight: 800; color: var(--text-main);
+        }
+        .team-name {
+            font-size: 12px; font-weight: 600; color: var(--text-sub);
+            max-width: 60px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+
+        .team-place {
+            font-size: 15px; font-weight: 700; color: var(--text-main);
+            line-height: 1.3; word-break: keep-all;
+
+            overflow-wrap: anywhere;
+        }
+        .team-floor {
+            display: block; font-size: 11px; font-weight: 500; color: var(--text-muted); margin-top: 4px;
+        }
+
+        .club-section-header { padding: 0 20px; margin-top: 25px; margin-bottom: 2px; }
         .club-section-title { font-size: 17px; font-weight: 700; color: var(--text-main); margin-bottom: 5px; }
         .club-section-desc { font-size: 13px; color: var(--text-muted); }
 
         .club-scroll-wrapper {
-            display: flex; overflow-x: auto; gap: 15px;
-            padding: 10px 20px 25px 20px;
+            overflow-x: auto;
             margin: 0 -20px;
+
+            padding: 10px 20px 30px 20px;
             scroll-snap-type: x mandatory; scroll-padding-left: 20px;
             -ms-overflow-style: none; scrollbar-width: none;
         }
         .club-scroll-wrapper::-webkit-scrollbar { display: none; }
 
+        .club-track {
+            display: inline-flex;
+            gap: 15px;
+            position: relative;
+
+            padding: 6px 0 15px 0;
+        }
+
+        .club-track-bg {
+            position: absolute; top: -10px; left: -20px; right: -20px; bottom: -20px;
+            z-index: 0;
+            filter: blur(14px);
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 22%, black 88%, transparent 100%);
+            mask-image: linear-gradient(to bottom, transparent 0%, black 22%, black 88%, transparent 100%);
+        }
+
         .club-card {
-            flex: 0 0 135px; height: 165px; border-radius: 24px; padding: 20px 15px; color: white;
+            flex: 0 0 160px; height: 185px;
+            border-radius: 20px;
+            padding: 22px 18px;
             position: relative; scroll-snap-align: start; cursor: pointer;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05); transition: transform 0.2s;
-            box-sizing: border-box; display: flex; flex-direction: column;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.15);
-            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between;
+            transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+            z-index: 1;
+
+            background-color: rgba(255, 255, 255, 0.45);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
+
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.6);
         }
         .club-card:active { transform: scale(0.95); }
 
-        .club-icon-wrap {
-            width: 42px; height: 42px;
-            background: rgba(255,255,255,0.25);
-            border-radius: 14px;
-            display: flex; align-items: center; justify-content: center;
-            margin-bottom: 15px;
-            color: #FFFFFF;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        .club-hook {
+            font-size: 16px; font-weight: 600; line-height: 1.5;
+            color: var(--text-main); letter-spacing: -0.4px; word-break: keep-all;
         }
-        .club-icon-wrap svg { width: 22px; height: 22px; }
-        .club-name { font-size: 18px; font-weight: 800; line-height: 1.4; margin-bottom: 4px; letter-spacing: -0.5px; }
-        .club-type { font-size: 13px; font-weight: 600; opacity: 0.95; word-break: keep-all; line-height: 1.3; }
 
-        /* 카드 오른쪽 아래 + 버튼 */
-        .club-plus-btn {
-            position: absolute; bottom: 15px; right: 15px; width: 28px; height: 28px;
-            background: white; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            color: var(--text-sub); box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-shadow: none;
+        .club-tag {
+            font-size: 12.5px; font-weight: 700; color: var(--text-sub);
         }
-        .club-plus-btn svg { width: 14px; height: 14px; }
 
-        .bg-coral-peach   { background: linear-gradient(135deg, rgba(242, 156, 131, 0.85) 0%, rgba(245, 181, 163, 0.6) 100%); }
-        .bg-soft-lavender { background: linear-gradient(135deg, rgba(165, 147, 194, 0.85) 0%, rgba(196, 182, 220, 0.6) 100%); }
-        .bg-spring-green  { background: linear-gradient(135deg, rgba(152, 193, 140, 0.85) 0%, rgba(180, 215, 170, 0.6) 100%); }
-        .bg-muted-blue    { background: linear-gradient(135deg, rgba(107, 139, 180, 0.85) 0%, rgba(141, 168, 202, 0.6) 100%); }
-        .bg-rose-pink     { background: linear-gradient(135deg, rgba(222, 136, 152, 0.85) 0%, rgba(235, 168, 180, 0.6) 100%); }
-        .bg-pale-sky      { background: linear-gradient(135deg, rgba(160, 195, 215, 0.85) 0%, rgba(218, 232, 240, 0.6) 100%); }
-        .bg-soft-lilac    { background: linear-gradient(135deg, rgba(187, 165, 211, 0.85) 0%, rgba(212, 195, 230, 0.6) 100%); }
-        /* =========================================
-           8. 동아리 상세 팝업 (바텀 시트)
-           ========================================= */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 3000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
         .modal-overlay.show { opacity: 1; pointer-events: auto; }
 
@@ -388,6 +415,7 @@
 
         .bs-content-scroll { overflow-y: auto; padding-bottom: 30px; touch-action: pan-y; -webkit-overflow-scrolling: touch; }
 
+        .bs-img { width: 100%; height: 200px; object-fit: cover; display: block; margin-bottom: 25px; background-color: #F0F4F8; }
         .bs-img-placeholder { width: 100%; height: 200px; background-color: #F0F4F8; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); margin-bottom: 25px; }
         .bs-img-placeholder svg { width: 36px; height: 36px; margin-bottom: 10px; }
         .bs-img-placeholder span { font-size: 13px; font-weight: 600; }
@@ -402,28 +430,38 @@
         .bs-info-row:last-child { margin-bottom: 0; }
         .bs-info-label { font-weight: 700; color: var(--text-main); width: 65px; flex-shrink: 0; display: flex; align-items: center; gap: 8px;}
         .bs-info-label svg { width: 16px; height: 16px; color: var(--text-muted); }
-        .bs-info-text { color: var(--text-sub); line-height: 1.4;}
-        /* =========================================
-           9. 교회 정보
-           ========================================= */
+        .bs-info-text { color: var(--text-sub); line-height: 1.4; word-break: keep-all; }
+
         .church-info-transparent { padding: 20px 0 20px 0; }
+
         .church-info-transparent .info-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 12px 15px;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(55px, auto) 1fr);
+            gap: 12px 8px;
+
             margin: 0 20px 15px 20px; padding-bottom: 15px; border-bottom: 1px dashed #D5DCE2;
         }
-        .info-row { display: flex; align-items: center; gap: 10px; }
-        .info-label { width: 55px; font-weight: 700; color: var(--text-main); flex-shrink: 0; font-size: 14px; }
-        .info-row span:not(.info-label) { font-size: 14px; color: var(--text-sub); }
+
+        @media (max-width: 371px) {
+            .church-info-transparent .info-grid,
+            .church-info-transparent .contact-info { margin-left: 10px; margin-right: 10px; }
+        }
+
+        @media (max-width: 359px) {
+            .church-info-transparent .info-grid { grid-template-columns: minmax(55px, auto) 1fr; }
+        }
+
+        .info-row { display: contents; }
+
+        .info-label { white-space: nowrap; font-weight: 700; color: var(--text-main); font-size: 14px; }
+        .info-row span:not(.info-label) { font-size: 14px; color: var(--text-sub); word-break: keep-all; }
 
         .contact-info {
-            display: grid; grid-template-columns: 55px 1fr; gap: 12px 15px; margin: 0 20px;
+            display: grid; grid-template-columns: minmax(55px, auto) 1fr; gap: 12px 8px; margin: 0 20px;
         }
         .contact-label { font-weight: 700; color: var(--text-main); font-size: 14px; }
         .contact-value { font-size: 14px; color: var(--text-sub); }
 
-        /* =========================================
-           10. 하단 공식 채널
-           ========================================= */
         .sns-horizontal-wrap { display: flex; align-items: center; justify-content: space-evenly; margin: 15px 0 20px 0; }
         .sns-h-item { display: flex; flex-direction: column; align-items: center; gap: 5px; text-decoration: none; transition: transform 0.2s ease; flex: 1; }
         .sns-h-item:active { transform: scale(0.95); }
@@ -440,17 +478,15 @@
                 <div class="intro-date-badge" id="intro-issue-badge">제26-34호 | 2026년 8월 23일</div>
                 <div class="intro-subtitle">Wolgwang Youth</div>
                 <h1 class="intro-main-title" id="intro-theme">나를 복음으로!!</h1>
-                <p class="intro-desc" id="intro-subtitle"></p>
+                <p class="intro-desc" id="intro-desc"></p>
             </div>
             <button class="intro-btn" onclick="openMainWeekly()">2026 청년예배 주보 열기</button>
         </div>
         <div class="bottom-gradient-mask"></div>
-        <!-- 상단 대제목 -->
         <div class="page-hero" id="page-hero">
             <h1 class="hero-title">Wolgwang Youth</h1>
             <p class="hero-sub" id="hero-sub">제26-34호</p>
         </div>
-        <!-- 하단 메인 메뉴 -->
         <nav class="tabs-menu">
             <button class="nav-item active" data-tab="worship" onclick="showScrollable('sec-worship')">
                 <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -475,7 +511,6 @@
             </button>
         </nav>
 
-        <!-- 예배 & 아름다운 순 뷰 -->
         <div id="view-scrollable" class="view-container active">
             <div class="timeline-wrapper">
                 <div class="timeline-line"></div>
@@ -495,11 +530,10 @@
                     <div class="section-header-wrap">
                         <div class="section-title">아름다운 순</div>
                     </div>
-                    <div class="card" id="sermon-questions"></div>
+                    <div id="sermon-questions"></div>
                 </div>
             </div>
         </div>
-        <!-- 소식 뷰 -->
         <div id="view-news" class="view-container">
             <div class="sub-tabs">
                 <button class="sub-tab-btn active" onclick="switchSubTab('guide', this)">예배·모임 안내</button>
@@ -537,7 +571,7 @@
                         <li>온라인 헌금 안내 <span style="font-size: 13px; color: var(--text-sub); font-weight: normal;">(예금주 : 월광교회)</span></li>
                     </ul>
                     <table class="guide-table" style="margin-top: 0;">
-                        <tr><th style="width: 40%;">주일/감사헌금</th><td>광주은행 141-107-337467</td></tr>
+                        <tr><th>주일/감사헌금</th><td>광주은행 141-107-337467</td></tr>
                         <tr><th>십일조</th><td>광주은행 000-000-000000</td></tr>
                         <tr><th>선교헌금</th><td>광주은행 000-000-000000</td></tr>
                     </table>
@@ -552,144 +586,13 @@
                 </div>
                 <div class="card">
                     <div class="card-title">팀 모임 장소</div>
-                    <div class="team-grid">
-                        <div class="team-cell">
-                            <div class="team-cell-head">
-                                <div class="team-no">1팀</div>
-                                <div class="team-name">이름</div>
-                            </div>
-                            <div class="team-place">디모데실<span class="team-floor">선교센터 2층</span></div>
-                        </div>
-                        <div class="team-cell">
-                            <div class="team-cell-head">
-                                <div class="team-no">2팀</div>
-                                <div class="team-name">이름</div>
-                            </div>
-                            <div class="team-place">사무엘실<span class="team-floor">선교센터 2층</span></div>
-                        </div>
-                        <div class="team-cell">
-                            <div class="team-cell-head">
-                                <div class="team-no">3팀</div>
-                                <div class="team-name">이름</div>
-                            </div>
-                            <div class="team-place">장소명<span class="team-floor">위치(층)</span></div>
-                        </div>
-                        <div class="team-cell">
-                            <div class="team-cell-head">
-                                <div class="team-no">4팀</div>
-                                <div class="team-name">이름</div>
-                            </div>
-                            <div class="team-place">장소명<span class="team-floor">위치(층)</span></div>
-                        </div>
-                        <div class="team-cell">
-                            <div class="team-cell-head">
-                                <div class="team-no">5팀</div>
-                                <div class="team-name">이름</div>
-                            </div>
-                            <div class="team-place">장소명<span class="team-floor">위치(층)</span></div>
-                        </div>
-                        <div class="team-cell">
-                            <div class="team-cell-head">
-                                <div class="team-no">6팀</div>
-                                <div class="team-name">이름</div>
-                            </div>
-                            <div class="team-place">장소명<span class="team-floor">위치(층)</span></div>
-                        </div>
-                        <div class="team-cell">
-                            <div class="team-cell-head">
-                                <div class="team-no">7팀</div>
-                                <div class="team-name">이름</div>
-                            </div>
-                            <div class="team-place">장소명<span class="team-floor">위치(층)</span></div>
-                        </div>
-                        <div class="team-cell">
-                            <div class="team-cell-head">
-                                <div class="team-no">8팀</div>
-                                <div class="team-name">이름</div>
-                            </div>
-                            <div class="team-place">장소명<span class="team-floor">위치(층)</span></div>
-                        </div>
-                    </div>
+                    <div class="team-grid" id="team-grid"></div>
                 </div>
-                <!-- 동아리 가로 스크롤 섹션 -->
                 <div class="club-section-header">
-                    <div class="club-section-title">청년부 소그룹 (동아리)</div>
+                    <div class="club-section-title">월광청년 동아리</div>
                     <div class="club-section-desc">카드를 눌러 동아리 상세 정보를 확인해보세요.</div>
                 </div>
-                <!-- 동아리 카드 (좌우로 밀어서 봅니다) -->
-                <div class="club-scroll-wrapper">
-                    <div class="club-card bg-coral-peach" onclick="openClubModal('월등')">
-                        <div class="club-icon-wrap">
-                            <svg class="svg-icon" viewBox="0 0 24 24"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></svg>
-                        </div>
-                        <div class="club-name">월등</div>
-                        <div class="club-type">등산 동아리</div>
-                        <div class="club-plus-btn">
-                            <svg class="svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                        </div>
-                    </div>
-                    <div class="club-card bg-soft-lavender" onclick="openClubModal('아리엘')">
-                        <div class="club-icon-wrap">
-                            <svg class="svg-icon" viewBox="0 0 24 24"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="6.5"/></svg>
-                        </div>
-                        <div class="club-name">아리엘</div>
-                        <div class="club-type">몸찬양 동아리</div>
-                        <div class="club-plus-btn">
-                            <svg class="svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                        </div>
-                    </div>
-                    <div class="club-card bg-spring-green" onclick="openClubModal('엎진살')">
-                        <div class="club-icon-wrap">
-                            <svg class="svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="12 8 15.5 10.5 14 15 10 15 8.5 10.5"/><path d="M12 8V2"/><path d="M15.5 10.5L20 9"/><path d="M14 15l3 4"/><path d="M10 15l-3 4"/><path d="M8.5 10.5L4 9"/></svg>
-                        </div>
-                        <div class="club-name">엎진살</div>
-                        <div class="club-type">풋살 동아리</div>
-                        <div class="club-plus-btn">
-                            <svg class="svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                        </div>
-                    </div>
-                    <div class="club-card bg-muted-blue" onclick="openClubModal('Psalm')">
-                        <div class="club-icon-wrap">
-                            <svg class="svg-icon" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-                        </div>
-                        <div class="club-name">Psalm</div>
-                        <div class="club-type">밴드 동아리</div>
-                        <div class="club-plus-btn">
-                            <svg class="svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                        </div>
-                    </div>
-                    <div class="club-card bg-rose-pink" onclick="openClubModal('한마디')">
-                        <div class="club-icon-wrap">
-                            <svg class="svg-icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="9" y1="10" x2="15" y2="10"/><line x1="12" y1="10" x2="12" y2="10.01"/></svg>
-                        </div>
-                        <div class="club-name">한마디</div>
-                        <div class="club-type">전도 동아리</div>
-                        <div class="club-plus-btn">
-                            <svg class="svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                        </div>
-                    </div>
-                    <div class="club-card bg-pale-sky" onclick="openClubModal('다독다독')">
-                        <div class="club-icon-wrap">
-                            <svg class="svg-icon" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
-                        </div>
-                        <div class="club-name">다독다독</div>
-                        <div class="club-type">독서 동아리</div>
-                        <div class="club-plus-btn">
-                            <svg class="svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                        </div>
-                    </div>
-                    <div class="club-card bg-soft-lilac" onclick="openClubModal('DANDANS')">
-                        <div class="club-icon-wrap">
-                            <svg class="svg-icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        </div>
-                        <div class="club-name">DANDANS</div>
-                        <div class="club-type">댄스 동아리</div>
-                        <div class="club-plus-btn">
-                            <svg class="svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                        </div>
-                    </div>
-                </div>
-                <!-- 교회 안내 정보 -->
+                <div class="club-scroll-wrapper" id="club-scroll"></div>
                 <div class="church-info-transparent">
                     <div class="info-grid">
                         <div class="info-row"><span class="info-label">원로목사</span><span>김유수 목사</span></div>
@@ -700,10 +603,9 @@
                         <div class="info-row"><span class="info-label">국장</span><span>백영환 안수</span></div>
                     </div>
 
-                    <!-- 연락처 (라벨/값 2열 그리드) -->
                     <div class="contact-info">
                         <div class="contact-label">주소</div>
-                        <div class="contact-value">전남광주 서구 염화로31번길 7</div>
+                        <div class="contact-value">전남광주 서구 염화로31번길&nbsp;7</div>
 
                         <div class="contact-label">전화</div>
                         <div class="contact-value">0507-1369-0447</div>
@@ -712,7 +614,6 @@
                         <div class="contact-value">062-000-0000</div>
                     </div>
                 </div>
-                <!-- 공식 채널 안내 -->
                 <div class="sns-horizontal-wrap">
                     <a href="https://www.instagram.com/wg_youth/" target="_blank" class="sns-h-item">
                         <svg class="sns-h-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -740,11 +641,9 @@
                     </a>
                 </div>
             </div>
-            <!-- 4-2. 주간 소식 서브 뷰 -->
             <div id="sub-view-notice" class="sub-view"></div>
         </div>
     </div>
-    <!-- 동아리 상세 팝업 -->
     <div id="modal-overlay" class="modal-overlay" onclick="closeClubModal()"></div>
     <div id="bottom-sheet" class="bottom-sheet">
         <div class="bs-handle-wrap" onclick="closeClubModal()">
@@ -752,8 +651,8 @@
         </div>
 
         <div class="bs-content-scroll">
+            <img id="modal-club-img" class="bs-img" alt="" style="display: none;">
             <div class="bs-img-placeholder">
-                <!-- 사진 영역 -->
                 <svg class="svg-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
                 <span>이곳에 동아리 사진을 넣어주세요</span>
             </div>
@@ -783,25 +682,100 @@
             </div>
         </div>
     </div>
-    <!-- =========================================
-         자바스크립트
-         ========================================= -->
+    <script>
+        /* ── 팀 모임 장소 ── [팀 번호, 팀장 이름, 장소, 위치(층)]
+           팀을 늘리거나 줄여도 화면은 알아서 맞춰집니다.
+           지하층은 '지하1층' · 'B1층' 이 아니라 'B1' 으로 적어주세요. */
+        const teams = [
+            ['1팀', '이름', '디모데실', '선교센터 2층'],
+            ['2팀', '이름', '사무엘실', '선교센터 2층'],
+            ['3팀', '이름', '장소명', '위치(층)'],
+            ['4팀', '이름', '장소명', '위치(층)'],
+            ['5팀', '이름', '장소명', '위치(층)'],
+            ['6팀', '이름', '장소명', '위치(층)'],
+            ['7팀', '이름', '장소명', '위치(층)'],
+            ['8팀', '이름', '장소명', '위치(층)']
+        ];
+
+        /* ── 동아리 ── 카드와 팝업이 모두 여기서 만들어집니다.
+             name   : 동아리 이름 (카드 아래 작은 글씨 · 팝업 제목)
+             hook   : 카드에 크게 들어가는 문구. 25자 안팎, 줄바꿈은 넣지 마세요
+             type   : 분류 (팝업에만 나옵니다)
+             color  : 카드 뒤 물결 색. bg-coral-peach / bg-soft-lavender /
+                      bg-spring-green / bg-muted-blue / bg-rose-pink /
+                      bg-pale-sky / bg-soft-lilac 중 하나
+             desc / time / loc / leader : 팝업에 들어갈 내용
+             img    : 팝업 맨 위 사진. 저장소에 올린 파일 경로 (예: 'clubs/woldeung.jpg')
+                      비워두면 '사진을 넣어주세요' 안내 상자가 대신 나옵니다
+           카드 순서 = 이 배열 순서이고, 물결 색도 순서를 따라갑니다. */
+        const clubs = [
+            {
+                name: '월등', type: '등산 동아리', color: 'bg-coral-peach',
+                hook: '"자연 속에서 상쾌하게 힐링할 사람?"',
+                desc: '월등은 매월 한 번씩 함께 산에 오르며 체력을 단련하고 자연 속에서 교제하는 모임입니다. 초보자도 쉽게 오를 수 있는 코스 위주로 진행되니 부담 없이 지원해주세요!',
+                time: '매월 셋째 주 토요일 오전', loc: '광주 인근 산 (일정별 안내)', leader: '이름 (010-0000-0000)',
+                img: ''
+            },
+            {
+                name: '아리엘', type: '몸찬양 동아리', color: 'bg-soft-lavender',
+                hook: '"아름다운 몸짓으로 깊은 은혜를 나누고 싶다면"',
+                desc: '아리엘은 아름다운 몸짓으로 하나님을 찬양하는 워십 댄스 동아리입니다. 춤이나 무용 경험이 없어도 찬양을 사모하는 마음만 있다면 누구나 환영합니다.',
+                time: '매주 주일 예배 후', loc: '비전홀', leader: '이름 (010-0000-0000)',
+                img: ''
+            },
+            {
+                name: '엎진살', type: '풋살 동아리', color: 'bg-spring-green',
+                hook: '"답답한 일상, 신나게 공 차며 스트레스 훌훌 날려요!"',
+                desc: '엎진살은 풋살을 통해 땀 흘리며 친목을 다지는 스포츠 동아리입니다. 뛰어난 실력보다는 함께 웃으며 즐겁게 뛰는 것을 목표로 합니다!',
+                time: '격주 토요일 오후', loc: '교회 인근 풋살장', leader: '이름 (010-0000-0000)',
+                img: ''
+            },
+            {
+                name: 'Psalm', type: '밴드 동아리', color: 'bg-muted-blue',
+                hook: '"악기와 목소리가 하나 되어 찬양의 기쁨을 누려요"',
+                desc: 'Psalm(시편)은 악기와 노래로 찬양의 기쁨을 나누는 밴드 동아리입니다. 정기적인 합주를 통해 음악적 재능을 나누고 영적으로 함께 성장해 나갑니다.',
+                time: '매주 금요일 저녁', loc: '본당 지하 합주실', leader: '이름 (010-0000-0000)',
+                img: ''
+            },
+            {
+                name: '한마디', type: '전도 동아리', color: 'bg-rose-pink',
+                hook: '"이웃에게 예수님의 사랑을 따뜻하게 전해볼까요?"',
+                desc: '한마디는 복음의 기쁜 소식을 한마디라도 더 전하기 위해 모인 동아리입니다. 노방 전도와 관계 전도 등 다양한 방법으로 예수님의 사랑을 실천합니다.',
+                time: '매주 토요일 오후', loc: '교회 주변 및 지역 번화가', leader: '이름 (010-0000-0000)',
+                img: ''
+            },
+            {
+                name: '다독다독', type: '독서 동아리', color: 'bg-pale-sky',
+                hook: '"향긋한 커피 한 잔과 함께 책 속에서 찾는 여유"',
+                desc: '다독다독은 신앙 서적 및 유익한 일반 양서를 읽고 각자의 생각을 나누는 독서 모임입니다. 책을 통해 지성을 쌓고 영적인 깊이를 더해갑니다.',
+                time: '매월 마지막 주 주일', loc: '교회 1층 카페', leader: '이름 (010-0000-0000)',
+                img: ''
+            },
+            {
+                name: 'DANDANS', type: '댄스 동아리', color: 'bg-soft-lilac',
+                hook: '"내 안의 흥을 깨워줄 활력 넘치는 시간이 필요할 때"',
+                desc: 'DANDANS는 트렌디한 K-POP 및 CCD(기독교 댄스)를 즐겁게 배우고 커버하는 액티브 댄스 동아리입니다. 스트레스도 풀고 교회 행사 무대에도 설 수 있습니다!',
+                time: '매주 주일 오후', loc: '선교센터 거울 연습실', leader: '이름 (010-0000-0000)',
+                img: ''
+            }
+        ];
+    </script>
     <script>
         /* =========================================================
-           매주 이 블록(bulletin)만 수정하면 주보 전체가 갱신됩니다.
-           아래 객체 바깥은 건드릴 필요가 없습니다.
+           매주 바뀌는 내용은 '구글 시트'에서 관리합니다.
+           아래 bulletin 은 시트를 아직 연결하지 않았을 때, 그리고 시트를
+           못 읽었을 때 대신 나오는 예비 내용입니다. 지우지 마세요.
+           급할 때는 여기를 직접 고쳐도 그대로 동작합니다.
            ========================================================= */
         const bulletin = {
-            /* --- 발행 정보 --- */
+            /* 발행 정보 · 이번 주 주제 */
             issueNo: '제26-34호',
             date: '2026년 8월 23일',
-            /* --- 이번 주 주제 (소식 탭 상단) --- */
             theme: '나를 복음으로!!',
             introSubtitle: '복음 안에서 좋은 그리스도인, 좋은 공동체',
             verse: '너희는 모든 악독과 노함과 분냄과 떠드는 것과 비방하는 것을 모든 악의와 함께 버리고 서로 친절하게 하며 불쌍히 여기며 서로 용서하기를 하나님이 그리스도 안에서 너희를 용서하심과 같이 하라 (에베소서 4:31-32)',
-            /* --- 예배순서 ---
-               [순서명, 담당/내용] 형태로 적으면 됩니다.
-               한 칸에 여러 줄이 필요하면 배열로 넣으세요. (예: 찬양 곡 목록)   */
+            /* 예배순서 — [순서명, 담당/내용].
+               한 칸에 여러 줄이 필요하면 배열로 넣으세요 (예: 찬양 곡 목록) */
             orderBefore: [
                 ['예배의 부름', '인도자'],
                 ['신앙고백', '사도신경'],
@@ -818,7 +792,7 @@
                 ['축도', '박은진 목사'],
                 ['광고', '박은진 목사']
             ],
-            /* --- 다음 주 섬김 --- */
+            /* 다음 주 섬김 */
             nextWeek: [
                 { header: '다음 주 예배위원', items: [
                     ['대표기도', '담당자'],
@@ -829,21 +803,19 @@
                     ['기도인도', '담당자']
                 ]}
             ],
-            /* --- 아름다운 순 --- */
-            shareQuestions: [
-                '신앙생활 하면서 교회에서 혹은 여러분의 삶의 자리에서 믿음을 지키며 살아갈 때 여러분을 가장 어렵게 하는 것은 무엇인가요?',
-                '그런 상황 속에서 마음을 나누거나, 여러분이 다시 믿음을 붙들 수 있도록 힘이 되어준 믿음의 동역자가 있었나요?',
-                '이번 한 주, 서로에게 전해주고 싶은 격려의 말이 있다면 나눠주세요.'
+            /* 아름다운 순 — 덩어리 하나가 카드 한 장 (보통은 '삶 속으로' 하나) */
+            shareSections: [
+                { header: '삶 속으로', items: [
+                    '신앙생활 하면서 교회에서 혹은 여러분의 삶의 자리에서 믿음을 지키며 살아갈 때 여러분을 가장 어렵게 하는 것은 무엇인가요?',
+                    '그런 상황 속에서 마음을 나누거나, 여러분이 다시 믿음을 붙들 수 있도록 힘이 되어준 믿음의 동역자가 있었나요?',
+                    '이번 한 주, 서로에게 전해주고 싶은 격려의 말이 있다면 나눠주세요.'
+                ]}
             ],
-            /* --- 주간 소식 (개수 제한 없이 추가/삭제 가능) ---
-               사용 가능한 항목 (필요한 것만 골라 쓰면 됩니다)
-                 title     : 소식 제목 (번호는 자동)
-                 lines     : 본문 줄 목록
-                 table     : { head: [...], rows: [[...], [...]] }
-                 pairs     : [['부서', '이름'], ...]  담당자 명단을 한 줄로 이어 붙임
-                 image     : { src: '이미지주소', alt: '설명', caption: '사진 설명(선택)' }
-                 highlight : 빨간색 강조 문구
-                 note      : 강조 문구 뒤에 붙는 일반 문구 (문의처 등)      */
+            /* 주간 소식 — 개수 제한 없이 추가·삭제 가능.
+                 title / lines / highlight / note
+                 pairs : [['부서', '이름'], ...]
+                 table : { head: [...], rows: [[...], [...]] }
+                 image : { src: '이미지주소', alt: '설명', caption: '사진 설명' } */
             notices: [
                 {
                     title: '청년부 여름 수련회 신청',
@@ -878,33 +850,15 @@
                     highlight: '함께 봉사할 의료인을 수시로 모집 중입니다.',
                     note: '문의: 메디컬센터 (담당자)'
                 }
-                /* 표를 넣는 예시
-                ,{
-                    title: '수련회 조편성',
-                    table: {
-                        head: ['조', '인솔자', '차량'],
-                        rows: [
-                            ['1조', '홍길동', '1호차'],
-                            ['2조', '김월광', '2호차']
-                        ]
-                    }
-                }
-                */
-                /* 이미지를 넣는 예시
-                ,{
-                    title: '수련회 포스터',
-                    image: { src: 'poster.jpg', alt: '수련회 포스터', caption: '자세한 내용은 포스터를 확인해주세요' }
-                }
-                */
             ]
         };
-        /* ================= 수정 영역 끝 ================= */
-        /* ---------- 렌더링 (수정 불필요) ---------- */
-        const esc = (t) => String(t)
-            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-        /* '2026년 8월 23일' → '2026.08.23' (상단 헤더 전용).
-           숫자 3개를 못 찾으면 원래 문자열을 그대로 씁니다. */
+        const esc = (t) => String(t)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+
+        const emph = (t) => esc(t).replace(/\*([^*\n]+)\*/g, '<span class="text-em">$1</span>');
+
         function toDotDate(str) {
             const m = String(str).match(/(\d{4})\D+(\d{1,2})\D+(\d{1,2})/);
             if (!m) return str;
@@ -919,17 +873,13 @@
                    `<span class="order-detail${multi ? ' text-right' : ''}">${text}</span></div>`;
         }
         function renderBulletin() {
-            // 발행 정보
             document.getElementById('intro-issue-badge').innerText = `${bulletin.issueNo} | ${bulletin.date}`;
             document.getElementById('intro-theme').innerText = bulletin.theme;
-            document.getElementById('intro-subtitle').innerText = bulletin.introSubtitle;
-            // 상단 대제목 아래: 호수 대신 날짜 (2026.08.23 형식)
+            document.getElementById('intro-desc').innerText = bulletin.introSubtitle;
             document.getElementById('hero-sub').innerText = toDotDate(bulletin.date);
-            // 예배순서 섹션 오른쪽: 날짜 대신 호수
             document.getElementById('worship-date').innerText = bulletin.issueNo;
             document.getElementById('news-theme').innerText = bulletin.theme;
             document.getElementById('news-verse').innerText = bulletin.verse;
-            // 예배순서 (설교 박스를 가운데 두고 앞/뒤 순서를 이어붙임)
             const before = bulletin.orderBefore
                 .map((row, i) => renderOrderRow('order-item', row,
                      i === bulletin.orderBefore.length - 1 ? 'no-border' : ''))
@@ -941,54 +891,309 @@
             const after = bulletin.orderAfter
                 .map(row => renderOrderRow('order-item', row)).join('');
             document.getElementById('worship-order').innerHTML = before + sermonBox + after;
-            // 다음 주 섬김
             document.getElementById('worship-next').innerHTML = bulletin.nextWeek
                 .map((group, gi) =>
                     `<div class="next-week-header${gi > 0 ? ' mt-15' : ''}">${esc(group.header)}</div>` +
                     group.items.map(row => renderOrderRow('next-week-item', row)).join('')
                 ).join('');
-            // 아름다운 순
-            document.getElementById('sermon-questions').innerHTML =
-                `<div class="card-title">삶 속으로</div>` +
-                `<ol class="share-list">${bulletin.shareQuestions.map(q => `<li>${esc(q)}</li>`).join('')}</ol>`;
-            // 주간 소식
+            document.getElementById('sermon-questions').innerHTML = (bulletin.shareSections || [])
+                .filter(s => s && s.items && s.items.length)
+                .map(s =>
+                    `<div class="card">` +
+                    `<div class="card-title">${esc(s.header)}</div>` +
+                    `<ol class="share-list">${s.items.map(q => `<li>${emph(q)}</li>`).join('')}</ol>` +
+                    `</div>`).join('');
             const renderNotice = (n, i) => {
                 let body = '';
                 if (n.lines && n.lines.length) {
-                    body += `<div class="card-desc">${n.lines.map(l => `- ${esc(l)}`).join('<br>')}</div>`;
+                    body += `<div class="card-desc">` + n.lines.map(l =>
+                        `<div class="notice-line">` +
+                        `<span class="notice-dash">-</span>` +
+                        `<span class="notice-line-text">${emph(l)}</span></div>`).join('') + `</div>`;
                 }
                 if (n.pairs && n.pairs.length) {
                     body += `<div class="pair-flow">` + n.pairs.map(([k, v]) =>
-                        `<b>${esc(k)}</b> ${esc(v)}`).join('<span class="sep">|</span>') + `</div>`;
+                        `<b>${emph(k)}</b> ${emph(v)}`).join('<span class="sep">|</span>') + `</div>`;
                 }
                 if (n.table && n.table.rows && n.table.rows.length) {
                     const head = (n.table.head && n.table.head.length)
-                        ? `<tr>${n.table.head.map(h => `<th>${esc(h)}</th>`).join('')}</tr>` : '';
+                        ? `<tr>${n.table.head.map(h => `<th>${emph(h)}</th>`).join('')}</tr>` : '';
                     const rows = n.table.rows
-                        .map(r => `<tr>${r.map(c => `<td>${esc(c)}</td>`).join('')}</tr>`).join('');
+                        .map(r => `<tr>${r.map(c => `<td>${emph(c)}</td>`).join('')}</tr>`).join('');
                     body += `<table class="notice-table">${head}${rows}</table>`;
                 }
                 if (n.image && n.image.src) {
                     body += `<figure class="notice-figure">` +
                             `<img src="${esc(n.image.src)}" alt="${esc(n.image.alt || '')}" loading="lazy">` +
-                            (n.image.caption ? `<figcaption>${esc(n.image.caption)}</figcaption>` : '') +
+                            (n.image.caption ? `<figcaption>${emph(n.image.caption)}</figcaption>` : '') +
                             `</figure>`;
                 }
                 if (n.highlight) {
                     body += `<div class="card-desc notice-highlight-wrap">` +
-                            `<span class="notice-highlight">* ${esc(n.highlight)}</span></div>`;
+                            `<span class="notice-highlight">* ${emph(n.highlight)}</span></div>`;
                 }
                 if (n.note) {
-                    body += `<div class="card-desc notice-highlight-wrap">${esc(n.note)}</div>`;
+                    body += `<div class="card-desc notice-highlight-wrap">${emph(n.note)}</div>`;
                 }
-                return `<div class="card"><div class="card-title">${i + 1}. ${esc(n.title)}</div>${body}</div>`;
+                return `<div class="card"><div class="card-title">${i + 1}. ${emph(n.title)}</div>${body}</div>`;
             };
             const noticeHtml = bulletin.notices.length
                 ? bulletin.notices.map(renderNotice).join('')
                 : `<div class="card"><p class="card-desc">이번 주 소식이 없습니다.</p></div>`;
-            document.querySelector('#sub-view-notice').innerHTML = noticeHtml;
+            document.getElementById('sub-view-notice').innerHTML = noticeHtml;
         }
+
+        function renderTeams() {
+            const grid = document.getElementById('team-grid');
+            if (!grid || typeof teams === 'undefined') return;
+            grid.innerHTML = teams.map(([no, name, place, floor]) =>
+                `<div class="team-cell">` +
+                    `<div class="team-cell-head">` +
+                        `<div class="team-no">${esc(no)}</div>` +
+                        `<div class="team-name">${esc(name)}</div>` +
+                    `</div>` +
+                    `<div class="team-place">${esc(place)}` +
+                        `<span class="team-floor">${esc(floor)}</span></div>` +
+                `</div>`).join('');
+        }
+
+        const TEAM_PLACE_MAX = 15;
+        const TEAM_PLACE_MIN = 12.5;
+        function fitTeamPlaces() {
+            const range = document.createRange();
+            document.querySelectorAll('.team-place').forEach(el => {
+                const textNode = el.firstChild;
+                if (!textNode || textNode.nodeType !== 3) return;
+                range.setStart(textNode, 0);
+                range.setEnd(textNode, textNode.length);
+
+                el.style.fontSize = '';
+                if (range.getClientRects().length === 0) return;
+
+                for (let size = TEAM_PLACE_MAX; size >= TEAM_PLACE_MIN; size -= 0.5) {
+                    el.style.fontSize = size + 'px';
+                    if (range.getClientRects().length <= 1) {
+                        if (size === TEAM_PLACE_MAX) el.style.fontSize = '';
+                        return;
+                    }
+                }
+            });
+        }
+        window.addEventListener('resize', fitTeamPlaces);
+
+        const CLUB_GLOW = {
+            'bg-coral-peach':   '242, 156, 131',
+            'bg-soft-lavender': '165, 147, 194',
+            'bg-spring-green':  '152, 193, 140',
+            'bg-muted-blue':    '107, 139, 180',
+            'bg-rose-pink':     '222, 136, 152',
+            'bg-pale-sky':      '160, 195, 215',
+            'bg-soft-lilac':    '187, 165, 211'
+        };
+
+        const CLUB_CARD_W = 160;
+        const CLUB_CARD_GAP = 15;
+        const CLUB_TRACK_PAD = 20;
+
+        function renderClubs() {
+            const wrap = document.getElementById('club-scroll');
+            if (!wrap || typeof clubs === 'undefined') return;
+
+            const glow = clubs.map((c, i) => {
+                const x = CLUB_TRACK_PAD + i * (CLUB_CARD_W + CLUB_CARD_GAP) + CLUB_CARD_W / 2;
+                const rgb = CLUB_GLOW[c.color] || '200, 205, 210';
+                return `radial-gradient(ellipse 120px 125px at ${x}px 62%, rgba(${rgb}, 0.95) 0%, transparent 78%)`;
+            }).join(',');
+
+            wrap.innerHTML =
+                `<div class="club-track">` +
+                    `<div class="club-track-bg" style="background:${glow}"></div>` +
+                    clubs.map((c, i) =>
+                        `<div class="club-card" data-club="${i}">` +
+                            `<div class="club-hook">${esc(c.hook || '')}</div>` +
+                            `<div class="club-tag">${esc(c.name)}</div>` +
+                        `</div>`).join('') +
+                `</div>`;
+
+            wrap.addEventListener('click', (e) => {
+                const card = e.target.closest('.club-card');
+                if (card) openClubModal(Number(card.dataset.club));
+            });
+        }
+
         renderBulletin();
+        renderTeams();
+        renderClubs();
+        /* =========================================================
+           구글 시트 연결 — 처음 한 번만 하면 됩니다.
+             1. 시트를 열고 [공유] → '링크가 있는 모든 사용자' → 권한 '뷰어'
+             2. 주소창의 .../spreadsheets/d/ 와 /edit 사이의 긴 글자를
+                아래 따옴표 안에 붙여 넣습니다
+                예) https://docs.google.com/spreadsheets/d/1AbC...XyZ/edit
+           탭 이름(기본정보 / 예배순서 / 나눔질문 / 주간소식)은 바꾸면 안 됩니다.
+           시트를 못 읽으면 위 bulletin 예비 내용이 그대로 나옵니다.
+           ========================================================= */
+        const SHEET_ID = '';
+
+        const SHEET_TABS = {
+            info:   '기본정보',
+            order:  '예배순서',
+            share:  '나눔질문',
+            notice: '주간소식'
+        };
+
+        function sheetCsvUrl(tabName) {
+            return 'https://docs.google.com/spreadsheets/d/' + SHEET_ID +
+                   '/gviz/tq?tqx=out:csv&headers=1&sheet=' + encodeURIComponent(tabName);
+        }
+
+        function parseCsv(text) {
+            const rows = [];
+            let row = [], cell = '', quoted = false;
+            text = String(text).replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+            for (let i = 0; i < text.length; i++) {
+                const ch = text[i];
+                if (quoted) {
+                    if (ch !== '"') { cell += ch; }
+                    else if (text[i + 1] === '"') { cell += '"'; i++; }
+                    else { quoted = false; }
+                } else if (ch === '"') { quoted = true; }
+                else if (ch === ',') { row.push(cell); cell = ''; }
+                else if (ch === '\n') { row.push(cell); rows.push(row); row = []; cell = ''; }
+                else { cell += ch; }
+            }
+            row.push(cell); rows.push(row);
+            return rows;
+        }
+
+        const cellText = (v) => String(v == null ? '' : v).trim();
+        const cellLines = (v) => cellText(v).split('\n').map(s => s.trim()).filter(Boolean);
+
+        function bodyRows(rows, headLabels) {
+            const labels = [].concat(headLabels);
+            const out = rows.filter(r => r.some(c => cellText(c) !== ''));
+            return (out.length && labels.indexOf(cellText(out[0][0])) >= 0) ? out.slice(1) : out;
+        }
+
+        function parseInfo(rows, target) {
+            const KEY = {
+                '호수': 'issueNo', '발행일': 'date', '주제': 'theme',
+                '인트로문구': 'introSubtitle', '성구': 'verse',
+                '설교제목': 'sermonTitle', '설교본문': 'sermonBible'
+            };
+            const got = {};
+            bodyRows(rows, '항목').forEach(r => {
+                const k = KEY[cellText(r[0]).replace(/\s/g, '')];
+                const v = cellText(r[1]);
+                if (k && v) got[k] = v;
+            });
+            ['issueNo', 'date', 'theme', 'introSubtitle', 'verse'].forEach(k => {
+                if (got[k]) target[k] = got[k];
+            });
+            if (got.sermonTitle || got.sermonBible) {
+                target.sermon = {
+                    title: got.sermonTitle || bulletin.sermon.title,
+                    bible: got.sermonBible || bulletin.sermon.bible
+                };
+            }
+        }
+
+        function parseOrder(rows, target) {
+            const before = [], after = [], next = [];
+            bodyRows(rows, '구분').forEach(r => {
+                const group = cellText(r[0]);
+                const title = cellText(r[1]);
+                if (!group || !title) return;
+                const lines = cellLines(r[2]);
+                const detail = lines.length > 1 ? lines : (lines[0] || '');
+                const g = group.replace(/\s/g, '');
+                if (g === '설교전') { before.push([title, detail]); }
+                else if (g === '설교후') { after.push([title, detail]); }
+                else {
+                    let grp = next.find(x => x.header === group);
+                    if (!grp) { grp = { header: group, items: [] }; next.push(grp); }
+                    grp.items.push([title, detail]);
+                }
+            });
+            if (before.length) target.orderBefore = before;
+            if (after.length) target.orderAfter = after;
+            if (next.length) target.nextWeek = next;
+        }
+
+        function parseShare(rows, target) {
+            const list = [];
+            bodyRows(rows, ['구분', '질문']).forEach(r => {
+                let header = cellText(r[0]);
+                let text = cellText(r[1]);
+                if (!text) { text = header; header = ''; }
+                if (!text) return;
+                if (!header) header = list.length ? list[list.length - 1].header : '삶 속으로';
+                let grp = list.find(x => x.header === header);
+                if (!grp) { grp = { header: header, items: [] }; list.push(grp); }
+                grp.items.push(text);
+            });
+            if (list.length) target.shareSections = list;
+        }
+
+        function parseNotices(rows, target) {
+            const list = [];
+            bodyRows(rows, '제목').forEach(r => {
+                const title = cellText(r[0]);
+                if (!title) return;
+                const n = { title };
+
+                const lines = cellLines(r[1]);
+                if (lines.length) n.lines = lines;
+
+                const pairs = cellLines(r[2]).map(l => {
+                    const i = l.indexOf(':');
+                    return i < 0 ? null : [l.slice(0, i).trim(), l.slice(i + 1).trim()];
+                }).filter(p => p && p[0] && p[1]);
+                if (pairs.length) n.pairs = pairs;
+
+                const tbl = cellLines(r[3]).map(l => l.split(',').map(c => c.trim()));
+                if (tbl.length > 1) { n.table = { head: tbl[0], rows: tbl.slice(1) }; }
+                else if (tbl.length === 1) { n.table = { head: [], rows: tbl }; }
+
+                const hl = cellText(r[4]); if (hl) n.highlight = hl;
+                const note = cellText(r[5]); if (note) n.note = note;
+                const src = cellText(r[6]);
+                if (src) n.image = { src: src, alt: title, caption: cellText(r[7]) };
+
+                list.push(n);
+            });
+
+            target.notices = list;
+        }
+
+        async function loadSheet() {
+            if (!SHEET_ID) return;
+            const keys = ['info', 'order', 'share', 'notice'];
+            const parsers = { info: parseInfo, order: parseOrder, share: parseShare, notice: parseNotices };
+
+            const texts = await Promise.all(keys.map(k =>
+                fetch(sheetCsvUrl(SHEET_TABS[k]), { cache: 'no-store' })
+                    .then(res => res.ok ? res.text() : null)
+                    .catch(() => null)
+            ));
+
+            const fresh = {};
+            let ok = false;
+            keys.forEach((k, i) => {
+                const text = texts[i];
+
+                if (text == null || /^\s*</.test(text)) return;
+                try { parsers[k](parseCsv(text), fresh); ok = true; }
+                catch (e) { console.warn('시트 탭을 읽지 못했습니다:', SHEET_TABS[k], e); }
+            });
+            if (!ok) return;
+
+            Object.assign(bulletin, fresh);
+            renderBulletin();
+            measureHero();
+        }
+        loadSheet();
+
         const pageHero = document.getElementById('page-hero');
         const appContainer = document.querySelector('.app-container');
         const viewScrollable = document.getElementById('view-scrollable');
@@ -997,44 +1202,37 @@
         const navItems = document.querySelectorAll('.nav-item');
         const sections = document.querySelectorAll('.section-block');
         let isClicking = false;
-        /* 스크롤 스파이가 섹션을 인식하는 기준 여백 */
+
         const SCROLL_SPY_OFFSET = 40;
-        /* 고정 헤더의 높이를 재서 본문 위 여백에 반영 */
+
         let heroExpandedH = 0;
         function measureHero() {
-            /* 측정하는 동안 헤더와 날짜 줄(.hero-sub)의 애니메이션을 모두 꺼야 합니다.
-               날짜 줄에는 max-height 애니메이션이 걸려 있어서, 그대로 재면 접히는
-               중간 높이가 잡히고 본문 위 여백이 모자라져 제목이 헤더에 가립니다.
-               휴대폰 주소창이 오르내릴 때마다 resize 로 다시 불리는 함수라 중요합니다. */
             const heroSub = document.getElementById('hero-sub');
             const prevTransition = pageHero.style.transition;
             const prevSubTransition = heroSub.style.transition;
-            pageHero.style.transition = 'none'; // 측정 중 애니메이션 간섭 방지
+            pageHero.style.transition = 'none';
             heroSub.style.transition = 'none';
             const wasCompact = pageHero.classList.contains('compact');
             pageHero.classList.remove('compact');
             heroExpandedH = pageHero.offsetHeight;
             if (wasCompact) pageHero.classList.add('compact');
-            pageHero.offsetHeight; // 강제 리플로우로 transition 복원 시점 분리
+            pageHero.offsetHeight;
             pageHero.style.transition = prevTransition;
             heroSub.style.transition = prevSubTransition;
             applyHeroSpacing();
         }
-        /* 본문 위 여백은 헤더의 '펼친 상태' 높이로 고정합니다.
-           헤더가 줄어들 때 여백까지 같이 줄이면 두 애니메이션의 타이밍이 어긋나
-           제목이 헤더 밑으로 파고듭니다. */
+
         function applyHeroSpacing() {
-            // +2px 안전 여백: 기기마다 폰트 렌더링이 반 픽셀 단위로 미세하게 달라지는 경우를 흡수
             appContainer.style.paddingTop = (heroExpandedH + 2) + 'px';
         }
         window.addEventListener('load', measureHero);
         window.addEventListener('resize', measureHero);
         measureHero();
-        /* 웹폰트가 적용된 뒤 한 번 더 측정합니다. 'load' 이벤트는 폰트 로딩 완료를
-           보장하지 않아서, 느린 네트워크(카카오톡 인앱 브라우저 등)에서는
-           폰트가 늦게 적용되며 헤더 높이가 나중에 바뀝니다. */
+
         if (document.fonts && document.fonts.ready) {
             document.fonts.ready.then(measureHero);
+
+            document.fonts.ready.then(fitTeamPlaces);
         }
         function openMainWeekly() {
             viewIntro.classList.add('fade-out');
@@ -1042,29 +1240,34 @@
         }
         function resetTabs() { navItems.forEach(item => item.classList.remove('active')); }
         function hideAllViews() { viewScrollable.classList.remove('active'); viewNews.classList.remove('active'); }
+
+        function setActiveSection(sectionId) {
+            resetTabs();
+            const tabName = String(sectionId).split('-')[1];
+            const activeTab = document.querySelector(`[data-tab="${tabName}"]`);
+            if (activeTab) activeTab.classList.add('active');
+            sections.forEach(section => {
+                section.classList.toggle('active', section.id === sectionId);
+            });
+        }
+
         function showNews() {
             resetTabs();
             document.querySelector('[data-tab="news"]').classList.add('active');
             hideAllViews();
             viewNews.classList.add('active');
+
+            fitTeamPlaces();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         function showScrollable(sectionId) {
-            resetTabs();
-            let tabName = sectionId.split('-')[1];
-            const activeTab = document.querySelector(`[data-tab="${tabName}"]`);
-            if(activeTab) activeTab.classList.add('active');
             hideAllViews();
             viewScrollable.classList.add('active');
+            setActiveSection(sectionId);
 
             isClicking = true;
-            sections.forEach(section => {
-                section.classList.remove('active');
-                if (section.getAttribute('id') === sectionId) { section.classList.add('active'); }
-            });
             setTimeout(() => {
                 const target = document.getElementById(sectionId);
-                // 첫 번째 섹션이면 헤더 아래 여백까지 포함해 최상단으로
                 if (sectionId === sections[0].getAttribute('id')) {
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 } else {
@@ -1078,14 +1281,12 @@
             document.querySelectorAll('.sub-view').forEach(view => view.classList.remove('active'));
             element.classList.add('active');
             document.getElementById('sub-view-' + tabName).classList.add('active');
+            if (tabName === 'guide') fitTeamPlaces();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-        /* 스크롤 이벤트 쓰로틀링 (requestAnimationFrame) */
+
         let scrollTicking = false;
         function handleScroll() {
-            /* 1) 대제목 축소 토글. 경계에서 떨리지 않도록 확장/축소 기준값을 다르게 둡니다.
-               축소 기준(10)은 헤더 아래 여유(약 22px)보다 작아야 합니다.
-               이 값을 키우면 그 사이에 제목이 펼쳐진 헤더에 가려집니다. */
             const isCompact = pageHero.classList.contains('compact');
             if (!isCompact && window.scrollY > 10) {
                 pageHero.classList.add('compact');
@@ -1094,27 +1295,20 @@
                 pageHero.classList.remove('compact');
                 applyHeroSpacing();
             }
-            // 2) 예배/아름다운 순 뷰에서만 스크롤 스파이 동작
             if (!viewScrollable.classList.contains('active') || isClicking) { scrollTicking = false; return; }
-            const headerOffset = SCROLL_SPY_OFFSET;
             let current = '';
             sections.forEach(section => {
                 const sectionTop = section.offsetTop;
-                if (window.pageYOffset >= (sectionTop - headerOffset)) { current = section.getAttribute('id'); }
+                if (window.pageYOffset >= (sectionTop - SCROLL_SPY_OFFSET)) { current = section.getAttribute('id'); }
             });
             if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 10) {
                 current = sections[sections.length - 1].getAttribute('id');
             }
             if (current) {
-                resetTabs();
-                let tabName = current.split('-')[1];
-                const activeTab = document.querySelector(`[data-tab="${tabName}"]`);
-                if(activeTab) activeTab.classList.add('active');
+                setActiveSection(current);
+            } else {
+                sections.forEach(section => section.classList.remove('active'));
             }
-            sections.forEach(section => {
-                section.classList.remove('active');
-                if (section.getAttribute('id') === current) { section.classList.add('active'); }
-            });
             scrollTicking = false;
         }
         window.addEventListener('scroll', () => {
@@ -1123,42 +1317,46 @@
                 scrollTicking = true;
             }
         });
-        /* 동아리 데이터 맵핑 */
-        const clubsData = {
-            '월등': { type: '등산 동아리', desc: '월등은 매월 한 번씩 함께 산에 오르며 체력을 단련하고 자연 속에서 교제하는 모임입니다. 초보자도 쉽게 오를 수 있는 코스 위주로 진행되니 부담 없이 지원해주세요!', time: '매월 셋째 주 토요일 오전', loc: '광주 인근 산 (일정별 안내)', leader: '이름 (010-0000-0000)' },
-            '아리엘': { type: '몸찬양 동아리', desc: '아리엘은 아름다운 몸짓으로 하나님을 찬양하는 워십 댄스 동아리입니다. 춤이나 무용 경험이 없어도 찬양을 사모하는 마음만 있다면 누구나 환영합니다.', time: '매주 주일 예배 후', loc: '비전홀', leader: '이름 (010-0000-0000)' },
-            '엎진살': { type: '풋살 동아리', desc: '엎진살은 풋살을 통해 땀 흘리며 친목을 다지는 스포츠 동아리입니다. 뛰어난 실력보다는 함께 웃으며 즐겁게 뛰는 것을 목표로 합니다!', time: '격주 토요일 오후', loc: '교회 인근 풋살장', leader: '이름 (010-0000-0000)' },
-            'Psalm': { type: '밴드 동아리', desc: 'Psalm(시편)은 악기와 노래로 찬양의 기쁨을 나누는 밴드 동아리입니다. 정기적인 합주를 통해 음악적 재능을 나누고 영적으로 함께 성장해 나갑니다.', time: '매주 금요일 저녁', loc: '본당 지하 합주실', leader: '이름 (010-0000-0000)' },
-            '한마디': { type: '전도 동아리', desc: '한마디는 복음의 기쁜 소식을 한마디라도 더 전하기 위해 모인 동아리입니다. 노방 전도와 관계 전도 등 다양한 방법으로 예수님의 사랑을 실천합니다.', time: '매주 토요일 오후', loc: '교회 주변 및 지역 번화가', leader: '이름 (010-0000-0000)' },
-            '다독다독': { type: '독서 동아리', desc: '다독다독은 신앙 서적 및 유익한 일반 양서를 읽고 각자의 생각을 나누는 독서 모임입니다. 책을 통해 지성을 쌓고 영적인 깊이를 더해갑니다.', time: '매월 마지막 주 주일', loc: '교회 1층 카페', leader: '이름 (010-0000-0000)' },
-            'DANDANS': { type: '댄스 동아리', desc: 'DANDANS는 트렌디한 K-POP 및 CCD(기독교 댄스)를 즐겁게 배우고 커버하는 액티브 댄스 동아리입니다. 스트레스도 풀고 교회 행사 무대에도 설 수 있습니다!', time: '매주 주일 오후', loc: '선교센터 거울 연습실', leader: '이름 (010-0000-0000)' }
-        };
-        function openClubModal(clubId) {
-            const data = clubsData[clubId];
-            if(!data) return;
-            document.getElementById('modal-club-name').innerText = clubId;
+        function openClubModal(index) {
+            const data = (typeof clubs !== 'undefined') ? clubs[index] : null;
+            if (!data) return;
+            document.getElementById('modal-club-name').innerText = data.name;
             document.getElementById('modal-club-type').innerText = data.type;
             document.getElementById('modal-club-desc').innerText = data.desc;
             document.getElementById('modal-club-time').innerText = data.time;
             document.getElementById('modal-club-loc').innerText = data.loc;
             document.getElementById('modal-club-leader').innerText = data.leader;
 
+            const clubImg = document.getElementById('modal-club-img');
+            const clubImgHolder = document.querySelector('.bs-img-placeholder');
+            const showPlaceholder = () => {
+                clubImg.style.display = 'none';
+                clubImgHolder.style.display = '';
+            };
+            clubImg.onerror = showPlaceholder;
+            if (data.img) {
+                clubImg.src = data.img;
+                clubImg.alt = data.name + ' 동아리 사진';
+                clubImg.style.display = 'block';
+                clubImgHolder.style.display = 'none';
+            } else {
+                clubImg.removeAttribute('src');
+                showPlaceholder();
+            }
+
             document.getElementById('modal-overlay').classList.add('show');
             document.getElementById('bottom-sheet').classList.add('show');
-            document.querySelector('.bs-content-scroll').scrollTop = 0;
-            // 모달 오픈 시 배경 스크롤 잠금
+            scrollContent.scrollTop = 0;
             document.body.classList.add('modal-open');
         }
-        // 팝업 닫기 (인라인 스타일 초기화 추가)
         function closeClubModal() {
             document.getElementById('modal-overlay').classList.remove('show');
             const sheet = document.getElementById('bottom-sheet');
             sheet.classList.remove('show');
             sheet.style.transform = '';
-            // 배경 스크롤 잠금 해제
             document.body.classList.remove('modal-open');
         }
-        /* 바텀 시트를 아래로 끌어서 닫기 */
+
         const bottomSheet = document.getElementById('bottom-sheet');
         const scrollContent = document.querySelector('.bs-content-scroll');
         let startY = 0;
@@ -1181,7 +1379,7 @@
                 if (e.cancelable) e.preventDefault();
             }
         }, { passive: false });
-        bottomSheet.addEventListener('touchend', (e) => {
+        bottomSheet.addEventListener('touchend', () => {
             if (!isDragging) return;
             isDragging = false;
 
